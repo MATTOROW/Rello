@@ -77,7 +77,7 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ?, rmmt =
         }
     }
 
-    public int updateSessionByUsername(String username, String rmmt) {
+    public int updateRmmtnByUsername(String username, String rmmt) {
         try {
             PreparedStatement preparedStatement = dbConnection
                     .getConnection()
