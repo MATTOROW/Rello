@@ -1,6 +1,6 @@
 package ru.itis.orisproject.models;
 
-public record Account(String username, String password, String email, String icon_path, String session_id) {
+public record Account(String username, String password, String email, String icon_path, String rmmt) {
     @Override
     public String username() {
         return username;
@@ -22,7 +22,7 @@ public record Account(String username, String password, String email, String ico
     }
 
     @Override
-    public String session_id() {
-        return session_id;
+    public String rmmt() {
+        return rmmt;
     }
 }
