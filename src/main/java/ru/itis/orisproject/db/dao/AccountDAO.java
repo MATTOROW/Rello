@@ -27,7 +27,7 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ?, rmmt =
     //language=sql
     private final String SQL_GET_ACC_BY_SESSION = "SELECT * FROM accounts WHERE rmmt = ?";
 
-    public Account getAccountByUsername(String username) {
+    public Account getByUsername(String username) {
         try {
             PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(SQL_GET_ACC_BY_USERNAME);
             preparedStatement.setString(1, username);
@@ -90,7 +90,7 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ?, rmmt =
         }
     }
 
-    public Account getBySession(String rmmt) {
+    public Account getByRmmt(String rmmt) {
         try {
             PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(SQL_GET_ACC_BY_SESSION);
             preparedStatement.setString(1, rmmt);
