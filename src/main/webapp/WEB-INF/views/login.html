@@ -17,7 +17,7 @@
                 <div></div>
             </div>
             <div class="col-md-9 align-self-center px-4 main-col">
-                <form method="POST">
+                <form method="POST" action="/acc-check">
                     <div>
                         <div class="row my-2">
                             <div class="col">
@@ -45,7 +45,12 @@
                             </div>
                         </div>
                         <div class="row my-2">
-                            <div class="col"><button class="btn btn-primary" type="button">Log in</button></div>
+                            <div class="col">
+                                <div class="form-check"><input class="form-check-input" type="checkbox" id="formCheck-1" name="remember"><label class="form-check-label" for="formCheck-1">Remember me?</label></div>
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col"><button class="btn btn-primary" type="submit">Log in</button></div>
                         </div>
                         <div class="row my-2">
                             <div class="col">
