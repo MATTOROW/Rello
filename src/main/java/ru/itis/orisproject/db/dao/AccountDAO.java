@@ -24,6 +24,8 @@ INSERT INTO accounts (username, password, email, icon_path, session_id) VALUES (
 UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ?, session_id = ? WHERE username = ?""";
     //language=sql
     private final String SQL_UPDATE_ACCOUNT_SESSION = "UPDATE accounts SET session_id = ? WHERE username = ?";
+    //language=sql
+    private final String SQL_GET_ACC_BY_SESSION = "SELECT * FROM accounts WHERE session_id = ?";
 
     public Account getAccountByUsername(String username) {
         try {
@@ -85,6 +87,17 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ?, sessio
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             return -1;
+        }
+    }
+
+    public Account getBySession(String session_id) {
+        try {
+            PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(SQL_GET_ACC_BY_SESSION);
+            preparedStatement.setString(1, session_id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next() ? accountMapper.mapRow(resultSet) : null;
+        } catch (SQLException e) {
+            return null;
         }
     }
 }
