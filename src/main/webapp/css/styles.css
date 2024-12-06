@@ -1,0 +1,55 @@
+html {
+  height: 100%;
+}
+
+body {
+  font-family: Montserrat, sans-serif;
+  height: 100%;
+  background: linear-gradient(var(--bs-blue), var(--bs-purple));
+}
+
+.container {
+  background: #0a1e27;
+  border-radius: 12px;
+}
+
+.logo {
+  background: url("../img/logo.svg") center / contain no-repeat;
+}
+
+.header {
+  color: var(--bs-light);
+}
+
+.input-div {
+  background: #e6e6e6;
+  border-style: none;
+  border-radius: 22px;
+}
+
+svg {
+  color: rgb(155,155,155);
+  min-width: 26px;
+  font-size: 26px;
+}
+
+.input {
+  background: transparent;
+  border-style: none;
+}
+
+.btn {
+  width: inherit;
+  background: #264fe9;
+  border-radius: 22px;
+}
+
+.new-acc {
+  color: var(--bs-light);
+  font-size: 14px;
+}
+
+a {
+  color: #41c3f8;
+}
+
