@@ -5,16 +5,12 @@ html {
 body {
   font-family: Montserrat, sans-serif;
   height: 100%;
-  background: linear-gradient(var(--bs-blue), var(--bs-purple));
+  background: linear-gradient(90deg, var(--bs-blue), var(--bs-purple));
 }
 
 .container {
   background: #0a1e27;
   border-radius: 12px;
-}
-
-.logo {
-  background: url("../img/logo.svg") center / contain no-repeat;
 }
 
 .header {
@@ -51,5 +47,37 @@ svg {
 
 a {
   color: #41c3f8;
+}
+
+@media (min-width: 300px) {
+  .logo {
+    background: url("../img/logo.svg") center / contain no-repeat;
+  }
+}
+
+@media (min-width: 768px) {
+  .logo {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    border: 4px solid #37caf1 ;
+    border-right-style: none;
+  }
+}
+
+@media (min-width: 300px) {
+  .main-col {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border-bottom-left-radius: 12px;
+    border: 4px solid #37caf1 ;
+  }
+}
+
+@media (min-width: 768px) {
+  .main-col {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
 }
 
