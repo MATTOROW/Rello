@@ -50,14 +50,6 @@ public class AuthFilter implements Filter {
                     if (account != null) {
                         session = httpRequest.getSession(true);
                         session.setAttribute("account", account);
-
-                        String newToken = UUID.randomUUID().toString();
-                        Cookie newRememberMeCookie = new Cookie("rmmt", newToken);
-                        newRememberMeCookie.setMaxAge(24 * 60 * 60);
-                        newRememberMeCookie.setPath("/");
-                        httpResponse.addCookie(newRememberMeCookie);
-
-                        accountDAO.updateRmmtByUsername(account.username(), newToken);
                         chain.doFilter(request, response);
                     } else {
                         httpRequest.getRequestDispatcher("/login").forward(request, response);
