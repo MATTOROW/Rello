@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import ru.itis.orisproject.db.dao.AccountDAO;
+import ru.itis.orisproject.db.dao.RmmtDAO;
 import ru.itis.orisproject.models.Account;
 
 import java.io.IOException;
@@ -42,10 +43,10 @@ public class AuthFilter implements Filter {
                 }
 
                 if (rememberMeToken != null) {
-                    AccountDAO accountDAO = (AccountDAO) request.getServletContext().getAttribute("AccountDAO");
-                    Account account = accountDAO.getByRmmt(rememberMeToken);
-
+                    RmmtDAO rmmtDAO = (RmmtDAO) request.getServletContext().getAttribute("RmmtDAO");
+                    Account account = rmmtDAO.getAccByToken(rememberMeToken);
                     if (account != null) {
+                        System.out.println("Не пуст");
                         session = httpRequest.getSession(true);
                         session.setAttribute("account", account);
                         chain.doFilter(request, response);

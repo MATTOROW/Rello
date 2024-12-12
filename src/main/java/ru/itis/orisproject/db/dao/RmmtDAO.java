@@ -14,7 +14,7 @@ public class RmmtDAO {
 
     //language=sql
     private final String SQL_GET_ACC_BY_TOKEN = """
-SELECT * FROM accounts INNER JOIN rmmt USING(username) WHERE username = ?""";
+SELECT * FROM accounts INNER JOIN rmmt USING(username) WHERE token = ?""";
     //language=sql
     private final String SQL_UPDATE_ACC_TOKEN = "UPDATE rmmt SET token = ? WHERE username = ? AND device_id = ?";
     //language=sql
@@ -33,7 +33,7 @@ SELECT * FROM accounts INNER JOIN rmmt USING(username) WHERE username = ?""";
         }
     }
 
-    public int updateAccToken(String token, String username, String device_id) {
+    public int updateAccToken(String username, String token, String device_id) {
         try {
             PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(SQL_UPDATE_ACC_TOKEN);
             preparedStatement.setString(1, token);

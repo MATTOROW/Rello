@@ -5,8 +5,11 @@ import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 import ru.itis.orisproject.db.DBConnection;
 import ru.itis.orisproject.db.dao.AccountDAO;
+import ru.itis.orisproject.db.dao.RmmtDAO;
 
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 
 @WebListener
@@ -23,6 +26,7 @@ public class ContextListener implements ServletContextListener {
                     properties.getProperty("user"),
                     properties.getProperty("password"));
             sce.getServletContext().setAttribute("AccountDAO", new AccountDAO());
+            sce.getServletContext().setAttribute("RmmtDAO", new RmmtDAO());
         } catch (IOException e) {
             e.printStackTrace();
         }

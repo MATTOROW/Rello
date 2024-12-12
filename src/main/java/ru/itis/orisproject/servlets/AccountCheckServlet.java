@@ -5,9 +5,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.itis.orisproject.db.dao.AccountDAO;
+import ru.itis.orisproject.db.dao.RmmtDAO;
 import ru.itis.orisproject.models.Account;
+import ru.itis.orisproject.services.HashDeviceId;
 
 import java.io.IOException;
+import java.security.MessageDigest;
 import java.util.UUID;
 
 @WebServlet("/acc-check")
@@ -17,7 +20,7 @@ public class AccountCheckServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         boolean rememberMe = "on".equals(req.getParameter("remember"));
-        AccountDAO accountDAO = new AccountDAO();
+        AccountDAO accountDAO = (AccountDAO) req.getServletContext().getAttribute("AccountDAO");
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         // Проверка учетных данных пользователя
@@ -30,12 +33,19 @@ public class AccountCheckServlet extends HttpServlet {
 
             // Если выбран "запомнить меня", создаем токен
             if (rememberMe) {
+                RmmtDAO rmmtDAO = new RmmtDAO();
                 String rememberMeToken = UUID.randomUUID().toString();
                 Cookie rememberMeCookie = new Cookie("rmmt", rememberMeToken);
                 rememberMeCookie.setMaxAge(60 * 60 * 24);
                 rememberMeCookie.setPath("/");
 
-                accountDAO.updateRmmtByUsername(username, rememberMeToken);
+                String deviceHash = HashDeviceId.hashString(req.getHeader("User-Agent"));
+
+                if (rmmtDAO.deviceRemembered(deviceHash)) {
+                    rmmtDAO.updateAccToken(username, rememberMeToken, deviceHash);
+                } else {
+                    rmmtDAO.save(username, rememberMeToken, deviceHash);
+                }
 
                 resp.addCookie(rememberMeCookie);
             }
