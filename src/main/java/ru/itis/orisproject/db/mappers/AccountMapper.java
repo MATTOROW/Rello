@@ -13,8 +13,7 @@ public class AccountMapper implements RowMapper<Account> {
             String password = resultSet.getString(2);
             String email = resultSet.getString(3);
             String icon_path = resultSet.getString(4);
-            String session_id = resultSet.getString(5);
-            return new Account(username, password, email, icon_path, session_id);
+            return new Account(username, password, email, icon_path);
         } catch (SQLException e) {
             return null;
         }
