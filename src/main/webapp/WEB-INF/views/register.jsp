@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+<%@ page session="false" %>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
 
@@ -7,7 +9,7 @@
     <title>Register</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat&amp;display=swap">
-    <link rel="stylesheet" href="css/login-register/styles.css">
+    <link rel="stylesheet" href="static/css/login-register/styles.css">
 </head>
 
 <body class="d-flex align-items-center">

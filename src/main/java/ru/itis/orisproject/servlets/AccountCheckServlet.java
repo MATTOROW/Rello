@@ -19,7 +19,6 @@ public class AccountCheckServlet extends HttpServlet {
         boolean rememberMe = "on".equals(req.getParameter("remember"));
         AccountDAO accountDAO = new AccountDAO();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        System.out.println(passwordEncoder.encode("pass"));
 
         // Проверка учетных данных пользователя
         Account acc = accountDAO.getByUsername(username);
@@ -33,7 +32,7 @@ public class AccountCheckServlet extends HttpServlet {
             if (rememberMe) {
                 String rememberMeToken = UUID.randomUUID().toString();
                 Cookie rememberMeCookie = new Cookie("rmmt", rememberMeToken);
-                rememberMeCookie.setMaxAge(24 * 60 * 60);
+                rememberMeCookie.setMaxAge(60 * 60 * 24);
                 rememberMeCookie.setPath("/");
 
                 accountDAO.updateRmmtByUsername(username, rememberMeToken);
@@ -41,9 +40,9 @@ public class AccountCheckServlet extends HttpServlet {
                 resp.addCookie(rememberMeCookie);
             }
 
-            resp.sendRedirect("/");
+            resp.sendRedirect(getServletContext().getContextPath() + "/");
         } else {
-            resp.sendRedirect("/login");
+            resp.sendRedirect(getServletContext().getContextPath() + "/login");
         }
     }
 }

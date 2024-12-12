@@ -1,3 +1,7 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page session="false" %>
+
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
 
@@ -7,7 +11,7 @@
     <title>Login</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat&amp;display=swap">
-    <link rel="stylesheet" href="css/login-register/styles.css">
+    <link rel="stylesheet" href="static/css/login-register/styles.css">
 </head>
 
 <body class="d-flex align-items-center">
@@ -17,7 +21,7 @@
                 <div></div>
             </div>
             <div class="col-md-9 align-self-center px-4 main-col">
-                <form method="POST" action="/acc-check">
+                <form method="POST" action="acc-check">
                     <div>
                         <div class="row my-2">
                             <div class="col">
@@ -63,5 +67,4 @@
         </div>
     </div>
 </body>
-
 </html>

@@ -4,6 +4,7 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 import ru.itis.orisproject.db.DBConnection;
+import ru.itis.orisproject.db.dao.AccountDAO;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -21,6 +22,7 @@ public class ContextListener implements ServletContextListener {
                     properties.getProperty("url"),
                     properties.getProperty("user"),
                     properties.getProperty("password"));
+            sce.getServletContext().setAttribute("AccountDAO", new AccountDAO());
         } catch (IOException e) {
             e.printStackTrace();
         }

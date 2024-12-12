@@ -10,7 +10,6 @@ import ru.itis.orisproject.db.dao.AccountDAO;
 import ru.itis.orisproject.models.Account;
 
 import java.io.IOException;
-import java.util.UUID;
 
 @WebFilter("/*")
 public class AuthFilter implements Filter {
@@ -23,8 +22,8 @@ public class AuthFilter implements Filter {
         if (
                 httpRequest.getServletPath().startsWith("/login") ||
                         httpRequest.getServletPath().startsWith("/acc-check") ||
-                        httpRequest.getServletPath().startsWith("/css") ||
-                        httpRequest.getServletPath().startsWith("/img")) {
+                        httpRequest.getServletPath().startsWith("/static")
+        ) {
             chain.doFilter(request, response);
         } else {
             HttpSession session = httpRequest.getSession(false);
@@ -33,7 +32,6 @@ public class AuthFilter implements Filter {
             } else {
                 Cookie[] cookies = httpRequest.getCookies();
                 String rememberMeToken = null;
-
                 if (cookies != null) {
                     for (Cookie cookie : cookies) {
                         if ("rmmt".equals(cookie.getName())) {
@@ -44,7 +42,7 @@ public class AuthFilter implements Filter {
                 }
 
                 if (rememberMeToken != null) {
-                    AccountDAO accountDAO = new AccountDAO();
+                    AccountDAO accountDAO = (AccountDAO) request.getServletContext().getAttribute("AccountDAO");
                     Account account = accountDAO.getByRmmt(rememberMeToken);
 
                     if (account != null) {
