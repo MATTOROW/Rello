@@ -8,7 +8,7 @@ import java.util.Deque;
 
 public class DBConnection {
     private Deque<Connection> connections;
-    private static final int max_size = 100;
+    private static final int max_size = 50;
     private static DBConnection entity;
     private Deque<Connection> usedConnections;
 
