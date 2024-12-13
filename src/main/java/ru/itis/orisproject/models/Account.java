@@ -1,23 +1,47 @@
 package ru.itis.orisproject.models;
 
-public record Account(String username, String password, String email, String icon_path) {
-    @Override
-    public String username() {
+public class Account {
+    private String username;
+    private String password;
+    private String email;
+    private String iconPath;
+
+    public Account(String username, String password, String email, String iconPath) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.iconPath = iconPath;
+    }
+
+    public String getUsername() {
         return username;
     }
 
-    @Override
-    public String password() {
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
         return password;
     }
 
-    @Override
-    public String email() {
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
         return email;
     }
 
-    @Override
-    public String icon_path() {
-        return icon_path;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getIconPath() {
+        return iconPath;
+    }
+
+    public void setIconPath(String iconPath) {
+        this.iconPath = iconPath;
     }
 }
