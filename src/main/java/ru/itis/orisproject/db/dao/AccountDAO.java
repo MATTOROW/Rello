@@ -61,7 +61,7 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ? WHERE u
         }
     }
 
-    public int updateByUsername(String username, Account acc) {
+    public int updateByUsername(Account acc, String username) {
         try {
             PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(SQL_UPDATE_BY_USERNAME);
             preparedStatement.setString(1, acc.username());

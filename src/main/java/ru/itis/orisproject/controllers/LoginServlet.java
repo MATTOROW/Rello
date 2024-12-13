@@ -1,4 +1,4 @@
-package ru.itis.orisproject.servlets;
+package ru.itis.orisproject.controllers;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

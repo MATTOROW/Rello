@@ -57,10 +57,10 @@ SELECT * FROM accounts INNER JOIN rmmt USING(username) WHERE token = ?""";
         }
     }
 
-    public boolean deviceRemembered(String device_id) {
+    public boolean deviceRemembered(String deviceId) {
         try {
             PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(SQL_DEVICE_REMEMBERED);
-            preparedStatement.setString(1, device_id);
+            preparedStatement.setString(1, deviceId);
             return preparedStatement.executeQuery().next();
         } catch (SQLException e) {
             return false;

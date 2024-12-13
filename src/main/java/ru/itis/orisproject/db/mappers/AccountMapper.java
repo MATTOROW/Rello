@@ -13,7 +13,6 @@ public class AccountMapper implements RowMapper<Account> {
             String password = resultSet.getString("password");
             String email = resultSet.getString("email");
             String icon_path = resultSet.getString("icon_path");
-            System.out.println(username + " " +  password + " " + email + " " + icon_path);
             return new Account(username, password, email, icon_path);
 
         } catch (SQLException e) {

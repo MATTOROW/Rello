@@ -1,16 +1,15 @@
-package ru.itis.orisproject.servlets;
+package ru.itis.orisproject.controllers;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.itis.orisproject.db.dao.AccountDAO;
-import ru.itis.orisproject.db.dao.RmmtDAO;
 import ru.itis.orisproject.models.Account;
+import ru.itis.orisproject.services.AccountService;
 import ru.itis.orisproject.services.HashDeviceId;
+import ru.itis.orisproject.services.RmmtService;
 
 import java.io.IOException;
-import java.security.MessageDigest;
 import java.util.UUID;
 
 @WebServlet("/acc-check")
@@ -20,11 +19,11 @@ public class AccountCheckServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         boolean rememberMe = "on".equals(req.getParameter("remember"));
-        AccountDAO accountDAO = (AccountDAO) req.getServletContext().getAttribute("AccountDAO");
+        AccountService accountService = (AccountService) req.getServletContext().getAttribute("AccountService");
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         // Проверка учетных данных пользователя
-        Account acc = accountDAO.getByUsername(username);
+        Account acc = accountService.getByUsername(username);
 
         if (acc != null && passwordEncoder.matches(password, acc.password())) {
             // Создаем сессию
@@ -33,7 +32,7 @@ public class AccountCheckServlet extends HttpServlet {
 
             // Если выбран "запомнить меня", создаем токен
             if (rememberMe) {
-                RmmtDAO rmmtDAO = new RmmtDAO();
+                RmmtService rmmtService = (RmmtService) req.getServletContext().getAttribute("RmmtService");
                 String rememberMeToken = UUID.randomUUID().toString();
                 Cookie rememberMeCookie = new Cookie("rmmt", rememberMeToken);
                 rememberMeCookie.setMaxAge(60 * 60 * 24);
@@ -41,10 +40,10 @@ public class AccountCheckServlet extends HttpServlet {
 
                 String deviceHash = HashDeviceId.hashString(req.getHeader("User-Agent"));
 
-                if (rmmtDAO.deviceRemembered(deviceHash)) {
-                    rmmtDAO.updateAccToken(username, rememberMeToken, deviceHash);
+                if (rmmtService.deviceRemembered(deviceHash)) {
+                    rmmtService.updateAccToken(username, rememberMeToken, deviceHash);
                 } else {
-                    rmmtDAO.save(username, rememberMeToken, deviceHash);
+                    rmmtService.save(username, rememberMeToken, deviceHash);
                 }
 
                 resp.addCookie(rememberMeCookie);
