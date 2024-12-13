@@ -29,11 +29,15 @@ public class RegisterServlet extends HttpServlet {
         AccountService accountService = (AccountService) req.getServletContext().getAttribute("AccountService");
 
         if (!username.isEmpty() && !password.isEmpty() && !email.isEmpty()) {
-            String hashPassword = passwordEncoder.encode(password);
-            Account acc = new Account(username, hashPassword, email, null);
-            int saved = accountService.save(acc);
-            if (saved == 0) {
-                errorMessage = "A user with such username or email already exists!";
+            if (isEmailValid(email)) {
+                String hashPassword = passwordEncoder.encode(password);
+                Account acc = new Account(username, hashPassword, email, null);
+                int saved = accountService.save(acc);
+                if (saved == 0) {
+                    errorMessage = "A user with such username or email already exists!";
+                }
+            } else {
+                errorMessage = "Your email does not matches pattern!";
             }
         } else {
             errorMessage = "You have not entered all data!";
@@ -45,5 +49,10 @@ public class RegisterServlet extends HttpServlet {
         } else {
             resp.sendRedirect(getServletContext().getContextPath() + "/");
         }
+    }
+
+    private boolean isEmailValid(String email) {
+        String pattern = "(?i)^[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}$";
+        return email.matches(pattern);
     }
 }
