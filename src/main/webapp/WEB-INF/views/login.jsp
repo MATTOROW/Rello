@@ -1,5 +1,4 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ page session="false" %>
 
 <!DOCTYPE html>
@@ -26,6 +25,9 @@
                         <div class="row my-2">
                             <div class="col">
                                 <p class="fs-4 fw-bold header">Member login</p>
+                                <c:if test="${errorMessage != null}">
+                                    <p class="error-message">${errorMessage}</p>
+                                </c:if>
                             </div>
                         </div>
                         <div class="row my-2">

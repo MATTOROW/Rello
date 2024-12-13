@@ -41,10 +41,10 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ? WHERE u
     public int save(Account acc) {
         try {
             PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(SQL_SAVE);
-            preparedStatement.setString(1, acc.username());
-            preparedStatement.setString(2, acc.password());
-            preparedStatement.setString(3, acc.email());
-            preparedStatement.setString(4, acc.icon_path());
+            preparedStatement.setString(1, acc.getUsername());
+            preparedStatement.setString(2, acc.getPassword());
+            preparedStatement.setString(3, acc.getEmail());
+            preparedStatement.setString(4, acc.getIconPath());
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             return -1;
@@ -64,10 +64,10 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ? WHERE u
     public int updateByUsername(Account acc, String username) {
         try {
             PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(SQL_UPDATE_BY_USERNAME);
-            preparedStatement.setString(1, acc.username());
-            preparedStatement.setString(2, acc.password());
-            preparedStatement.setString(3, acc.email());
-            preparedStatement.setString(4, acc.icon_path());
+            preparedStatement.setString(1, acc.getUsername());
+            preparedStatement.setString(2, acc.getPassword());
+            preparedStatement.setString(3, acc.getEmail());
+            preparedStatement.setString(4, acc.getIconPath());
             preparedStatement.setString(5, username);
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {

@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ page session="false" %>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
@@ -24,6 +24,9 @@
                         <div class="row my-2">
                             <div class="col">
                                 <p class="fs-4 fw-bold header">Member register</p>
+                                <c:if test="${errorMessage != null}">
+                                    <p class="error-message">${errorMessage}</p>
+                                </c:if>
                             </div>
                         </div>
                         <div class="row my-2">
@@ -55,7 +58,7 @@
                             </div>
                         </div>
                         <div class="row my-2">
-                            <div class="col"><button class="btn btn-primary" type="button">Register</button></div>
+                            <div class="col"><button class="btn btn-primary" type="submit">Register</button></div>
                         </div>
                         <div class="row my-2">
                             <div class="col">

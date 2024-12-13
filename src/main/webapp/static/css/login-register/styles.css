@@ -85,3 +85,9 @@ a {
   color: var(--bs-light);
 }
 
+.error-message {
+  color: rgb(255,44,44);
+}
+
+
+

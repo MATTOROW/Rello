@@ -21,37 +21,47 @@ public class AccountCheckServlet extends HttpServlet {
         boolean rememberMe = "on".equals(req.getParameter("remember"));
         AccountService accountService = (AccountService) req.getServletContext().getAttribute("AccountService");
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String errorMessage = null;
 
-        // Проверка учетных данных пользователя
-        Account acc = accountService.getByUsername(username);
+        if (!username.isEmpty() && !password.isEmpty()) {
+            // Проверка учетных данных пользователя
+            Account acc = accountService.getByUsername(username);
 
-        if (acc != null && passwordEncoder.matches(password, acc.password())) {
-            // Создаем сессию
-            HttpSession session = req.getSession();
-            session.setAttribute("account", acc);
+            if (acc != null && passwordEncoder.matches(password, acc.getPassword())) {
+                // Создаем сессию
+                HttpSession session = req.getSession();
+                session.setAttribute("account", acc);
 
-            // Если выбран "запомнить меня", создаем токен
-            if (rememberMe) {
-                RmmtService rmmtService = (RmmtService) req.getServletContext().getAttribute("RmmtService");
-                String rememberMeToken = UUID.randomUUID().toString();
-                Cookie rememberMeCookie = new Cookie("rmmt", rememberMeToken);
-                rememberMeCookie.setMaxAge(60 * 60 * 24);
-                rememberMeCookie.setPath("/");
+                // Если выбран "запомнить меня", создаем токен
+                if (rememberMe) {
+                    RmmtService rmmtService = (RmmtService) req.getServletContext().getAttribute("RmmtService");
+                    String rememberMeToken = UUID.randomUUID().toString();
+                    Cookie rememberMeCookie = new Cookie("rmmt", rememberMeToken);
+                    rememberMeCookie.setMaxAge(60 * 60 * 24);
+                    rememberMeCookie.setPath("/");
 
-                String deviceHash = HashDeviceId.hashString(req.getHeader("User-Agent"));
+                    String deviceHash = HashDeviceId.hashString(req.getHeader("User-Agent"));
 
-                if (rmmtService.deviceRemembered(deviceHash)) {
-                    rmmtService.updateAccToken(username, rememberMeToken, deviceHash);
-                } else {
-                    rmmtService.save(username, rememberMeToken, deviceHash);
+                    if (rmmtService.deviceRemembered(deviceHash)) {
+                        rmmtService.updateAccToken(username, rememberMeToken, deviceHash);
+                    } else {
+                        rmmtService.save(username, rememberMeToken, deviceHash);
+                    }
+
+                    resp.addCookie(rememberMeCookie);
                 }
-
-                resp.addCookie(rememberMeCookie);
+            } else {
+                errorMessage = "You have entered an incorrect username or password!";
             }
-
-            resp.sendRedirect(getServletContext().getContextPath() + "/");
         } else {
-            resp.sendRedirect(getServletContext().getContextPath() + "/login");
+            errorMessage = "You have not entered all data!";
+        }
+
+        if (errorMessage != null) {
+            req.setAttribute("errorMessage", errorMessage);
+            req.getRequestDispatcher("WEB-INF/views/login.jsp").forward(req, resp);
+        } else {
+            resp.sendRedirect(getServletContext().getContextPath() + "/");
         }
     }
 }
