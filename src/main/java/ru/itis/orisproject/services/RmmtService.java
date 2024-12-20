@@ -1,6 +1,6 @@
 package ru.itis.orisproject.services;
 
-import ru.itis.orisproject.db.dao.RmmtDAO;
+import ru.itis.orisproject.repositories.RmmtDAO;
 import ru.itis.orisproject.models.Account;
 
 public class RmmtService {

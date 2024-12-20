@@ -6,8 +6,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import ru.itis.orisproject.db.dao.AccountDAO;
-import ru.itis.orisproject.db.dao.RmmtDAO;
 import ru.itis.orisproject.models.Account;
 import ru.itis.orisproject.services.RmmtService;
 
