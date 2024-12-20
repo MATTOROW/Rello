@@ -1,4 +1,4 @@
-package ru.itis.orisproject.db.mappers;
+package ru.itis.orisproject.mappers;
 
 import ru.itis.orisproject.models.Account;
 

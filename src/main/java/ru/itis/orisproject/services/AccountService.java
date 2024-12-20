@@ -1,6 +1,6 @@
 package ru.itis.orisproject.services;
 
-import ru.itis.orisproject.db.dao.AccountDAO;
+import ru.itis.orisproject.repositories.AccountDAO;
 import ru.itis.orisproject.models.Account;
 
 import java.util.List;
