@@ -1,7 +1,7 @@
-package ru.itis.orisproject.db.dao;
+package ru.itis.orisproject.repositories;
 
-import ru.itis.orisproject.db.DBConnection;
-import ru.itis.orisproject.db.mappers.AccountMapper;
+import ru.itis.orisproject.db.DBConfig;
+import ru.itis.orisproject.mappers.AccountMapper;
 import ru.itis.orisproject.models.Account;
 
 import java.sql.PreparedStatement;
@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountDAO {
-    private final DBConnection dbConnection = DBConnection.getDBConnection();
     private final AccountMapper accountMapper = new AccountMapper();
 
     //language=sql
@@ -29,7 +28,7 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ? WHERE u
 
     public Account getByUsername(String username) {
         try {
-            PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(SQL_GET_BY_USERNAME);
+            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_GET_BY_USERNAME);
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next() ? accountMapper.mapRow(resultSet) : null;
@@ -40,11 +39,11 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ? WHERE u
 
     public int save(Account acc) {
         try {
-            PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(SQL_SAVE);
-            preparedStatement.setString(1, acc.username());
-            preparedStatement.setString(2, acc.password());
-            preparedStatement.setString(3, acc.email());
-            preparedStatement.setString(4, acc.icon_path());
+            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_SAVE);
+            preparedStatement.setString(1, acc.getUsername());
+            preparedStatement.setString(2, acc.getPassword());
+            preparedStatement.setString(3, acc.getEmail());
+            preparedStatement.setString(4, acc.getIconPath());
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             return -1;
@@ -53,7 +52,7 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ? WHERE u
 
     public int deleteByUsername(String username) {
         try {
-            PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(SQL_DELETE_BY_USERNAME);
+            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_DELETE_BY_USERNAME);
             preparedStatement.setString(1, username);
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -61,13 +60,13 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ? WHERE u
         }
     }
 
-    public int updateByUsername(String username, Account acc) {
+    public int updateByUsername(Account acc, String username) {
         try {
-            PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(SQL_UPDATE_BY_USERNAME);
-            preparedStatement.setString(1, acc.username());
-            preparedStatement.setString(2, acc.password());
-            preparedStatement.setString(3, acc.email());
-            preparedStatement.setString(4, acc.icon_path());
+            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_UPDATE_BY_USERNAME);
+            preparedStatement.setString(1, acc.getUsername());
+            preparedStatement.setString(2, acc.getPassword());
+            preparedStatement.setString(3, acc.getEmail());
+            preparedStatement.setString(4, acc.getIconPath());
             preparedStatement.setString(5, username);
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -77,7 +76,7 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ? WHERE u
 
     public List<Account> getByUsernameILike(String username) {
         try {
-            PreparedStatement preparedStatement = dbConnection
+            PreparedStatement preparedStatement = DBConfig
                     .getConnection()
                     .prepareStatement(SQL_GET_BY_USERNAME_ILIKE);
             preparedStatement.setString(1, "\\%%s\\%".formatted(username));
