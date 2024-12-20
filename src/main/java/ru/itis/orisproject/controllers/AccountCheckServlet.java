@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.itis.orisproject.models.AccountEntity;
 import ru.itis.orisproject.services.AccountService;
 import ru.itis.orisproject.services.HashDeviceId;
+import ru.itis.orisproject.services.PasswordCoder;
 import ru.itis.orisproject.services.RmmtService;
 
 import java.io.IOException;
@@ -20,17 +21,22 @@ public class AccountCheckServlet extends HttpServlet {
         String password = req.getParameter("password");
         boolean rememberMe = "on".equals(req.getParameter("remember"));
         AccountService accountService = (AccountService) req.getServletContext().getAttribute("AccountService");
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String errorMessage = null;
 
         if (!username.isEmpty() && !password.isEmpty()) {
             // Проверка учетных данных пользователя
-            AccountEntity acc = accountService.getByUsername(username);
+            AccountEntity acc = accountService.getEntityByUsername(username);
 
-            if (acc != null && passwordEncoder.matches(password, acc.getPassword())) {
+            if (acc != null && PasswordCoder.matches(password, acc.getPassword())) {
                 // Создаем сессию
                 HttpSession session = req.getSession();
                 session.setAttribute("account", acc);
+
+                // Удаляем содержащуюся куку
+                Cookie lastRmmtCookie = new Cookie("rmmt", "");
+                lastRmmtCookie.setMaxAge(0);
+                lastRmmtCookie.setPath("/");
+                resp.addCookie(lastRmmtCookie);
 
                 // Если выбран "запомнить меня", создаем токен
                 if (rememberMe) {

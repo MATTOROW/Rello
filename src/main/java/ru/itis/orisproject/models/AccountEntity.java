@@ -5,12 +5,14 @@ public class AccountEntity {
     private String password;
     private String email;
     private String iconPath;
+    private String description;
 
-    public AccountEntity(String username, String password, String email, String iconPath) {
+    public AccountEntity(String username, String password, String email, String iconPath, String description) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.iconPath = iconPath;
+        this.description = description;
     }
 
     public String getUsername() {
@@ -43,5 +45,13 @@ public class AccountEntity {
 
     public void setIconPath(String iconPath) {
         this.iconPath = iconPath;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -50,10 +50,10 @@ public class AuthFilter implements Filter {
                         session.setAttribute("account", accountEntity);
                         chain.doFilter(request, response);
                     } else {
-                        httpRequest.getRequestDispatcher("/login").forward(request, response);
+                        httpResponse.sendRedirect(request.getServletContext().getContextPath() + "/login");
                     }
                 } else {
-                    httpRequest.getRequestDispatcher("/login").forward(request, response);
+                    httpResponse.sendRedirect(request.getServletContext().getContextPath() + "/login");
                 }
             }
         }

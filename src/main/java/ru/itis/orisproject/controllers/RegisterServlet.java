@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.itis.orisproject.dto.request.AccountRequest;
 import ru.itis.orisproject.models.AccountEntity;
 import ru.itis.orisproject.services.AccountService;
+import ru.itis.orisproject.services.PasswordCoder;
 
 import java.io.IOException;
 
@@ -24,14 +25,13 @@ public class RegisterServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         String email = req.getParameter("email");
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         String errorMessage = null;
         AccountService accountService = (AccountService) req.getServletContext().getAttribute("AccountService");
 
         if (!username.isEmpty() && !password.isEmpty() && !email.isEmpty()) {
             if (isEmailValid(email)) {
-                String hashPassword = passwordEncoder.encode(password);
+                String hashPassword = PasswordCoder.encode(password);
                 AccountRequest acc = new AccountRequest(username, hashPassword, email, null, null);
                 int saved = accountService.save(acc);
                 if (saved == 0) {
