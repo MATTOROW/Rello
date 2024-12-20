@@ -60,7 +60,7 @@
                         </div>
                         <div class="row my-2">
                             <div class="col">
-                                <p class="text-center new-acc mb-0">I don't have <a href="register">accountEntity</a>.</p>
+                                <p class="text-center new-acc mb-0">I don't have <a href="register">account</a>.</p>
                             </div>
                         </div>
                     </div>

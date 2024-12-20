@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import ru.itis.orisproject.dto.request.AccountRequest;
 import ru.itis.orisproject.models.AccountEntity;
 import ru.itis.orisproject.services.AccountService;
 
@@ -31,10 +32,12 @@ public class RegisterServlet extends HttpServlet {
         if (!username.isEmpty() && !password.isEmpty() && !email.isEmpty()) {
             if (isEmailValid(email)) {
                 String hashPassword = passwordEncoder.encode(password);
-                AccountEntity acc = new AccountEntity(username, hashPassword, email, null);
+                AccountRequest acc = new AccountRequest(username, hashPassword, email, null, null);
                 int saved = accountService.save(acc);
                 if (saved == 0) {
                     errorMessage = "A user with such username or email already exists!";
+                } else if (saved == -1) {
+                    errorMessage = "Error with database, try again.";
                 }
             } else {
                 errorMessage = "Your email does not matches pattern!";

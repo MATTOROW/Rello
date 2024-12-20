@@ -1,7 +1,7 @@
 package ru.itis.orisproject.repositories;
 
 import ru.itis.orisproject.db.DBConfig;
-import ru.itis.orisproject.mappers.AccountMapper;
+import ru.itis.orisproject.mappers.AccountEntityMapper;
 import ru.itis.orisproject.models.AccountEntity;
 
 import java.sql.PreparedStatement;
@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class RmmtRepository {
-    private final AccountMapper accountMapper = new AccountMapper();
+    private final AccountEntityMapper accountEntityMapper = new AccountEntityMapper();
 
     //language=sql
     private final String SQL_GET_ACC_BY_TOKEN = """
@@ -26,7 +26,7 @@ SELECT * FROM accounts INNER JOIN rmmt USING(username) WHERE token = ?""";
             PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_GET_ACC_BY_TOKEN);
             preparedStatement.setString(1, token);
             ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.next() ? accountMapper.mapRow(resultSet) : null;
+            return resultSet.next() ? accountEntityMapper.mapRow(resultSet) : null;
         } catch (SQLException e) {
             return null;
         }
