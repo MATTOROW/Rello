@@ -4,7 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.itis.orisproject.models.Account;
+import ru.itis.orisproject.models.AccountEntity;
 import ru.itis.orisproject.services.AccountService;
 import ru.itis.orisproject.services.HashDeviceId;
 import ru.itis.orisproject.services.RmmtService;
@@ -25,7 +25,7 @@ public class AccountCheckServlet extends HttpServlet {
 
         if (!username.isEmpty() && !password.isEmpty()) {
             // Проверка учетных данных пользователя
-            Account acc = accountService.getByUsername(username);
+            AccountEntity acc = accountService.getByUsername(username);
 
             if (acc != null && passwordEncoder.matches(password, acc.getPassword())) {
                 // Создаем сессию

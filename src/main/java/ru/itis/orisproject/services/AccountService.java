@@ -1,18 +1,18 @@
 package ru.itis.orisproject.services;
 
-import ru.itis.orisproject.repositories.AccountDAO;
-import ru.itis.orisproject.models.Account;
+import ru.itis.orisproject.models.AccountEntity;
+import ru.itis.orisproject.repositories.AccountRepository;
 
 import java.util.List;
 
 public class AccountService {
-    private final AccountDAO dao = new AccountDAO();
+    private final AccountRepository dao = new AccountRepository();
 
-    public Account getByUsername(String username) {
+    public AccountEntity getByUsername(String username) {
         return dao.getByUsername(username);
     }
 
-    public int save(Account acc) {
+    public int save(AccountEntity acc) {
         return dao.save(acc);
     }
 
@@ -20,11 +20,11 @@ public class AccountService {
         return dao.deleteByUsername(username);
     }
 
-    public int updateByUsername(Account acc, String username) {
+    public int updateByUsername(AccountEntity acc, String username) {
         return dao.updateByUsername(acc, username);
     }
 
-    public List<Account> getByUsernameILike(String username) {
+    public List<AccountEntity> getByUsernameILike(String username) {
         return dao.getByUsernameILike(username);
     }
 }

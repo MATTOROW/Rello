@@ -6,7 +6,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import ru.itis.orisproject.models.Account;
+import ru.itis.orisproject.models.AccountEntity;
 import ru.itis.orisproject.services.RmmtService;
 
 import java.io.IOException;
@@ -44,10 +44,10 @@ public class AuthFilter implements Filter {
 
                 if (rememberMeToken != null) {
                     RmmtService rmmtService = (RmmtService) request.getServletContext().getAttribute("RmmtService");
-                    Account account = rmmtService.getAccByToken(rememberMeToken);
-                    if (account != null) {
+                    AccountEntity accountEntity = rmmtService.getAccByToken(rememberMeToken);
+                    if (accountEntity != null) {
                         session = httpRequest.getSession(true);
-                        session.setAttribute("account", account);
+                        session.setAttribute("account", accountEntity);
                         chain.doFilter(request, response);
                     } else {
                         httpRequest.getRequestDispatcher("/login").forward(request, response);

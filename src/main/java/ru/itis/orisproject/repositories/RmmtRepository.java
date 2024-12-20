@@ -2,13 +2,13 @@ package ru.itis.orisproject.repositories;
 
 import ru.itis.orisproject.db.DBConfig;
 import ru.itis.orisproject.mappers.AccountMapper;
-import ru.itis.orisproject.models.Account;
+import ru.itis.orisproject.models.AccountEntity;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class RmmtDAO {
+public class RmmtRepository {
     private final AccountMapper accountMapper = new AccountMapper();
 
     //language=sql
@@ -21,7 +21,7 @@ SELECT * FROM accounts INNER JOIN rmmt USING(username) WHERE token = ?""";
     //language=sql
     private final String SQL_DEVICE_REMEMBERED = "SELECT device_id FROM rmmt WHERE device_id = ?";
 
-    public Account getAccByToken(String token) {
+    public AccountEntity getAccByToken(String token) {
         try {
             PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_GET_ACC_BY_TOKEN);
             preparedStatement.setString(1, token);

@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.itis.orisproject.models.Account;
+import ru.itis.orisproject.models.AccountEntity;
 import ru.itis.orisproject.services.AccountService;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class RegisterServlet extends HttpServlet {
         if (!username.isEmpty() && !password.isEmpty() && !email.isEmpty()) {
             if (isEmailValid(email)) {
                 String hashPassword = passwordEncoder.encode(password);
-                Account acc = new Account(username, hashPassword, email, null);
+                AccountEntity acc = new AccountEntity(username, hashPassword, email, null);
                 int saved = accountService.save(acc);
                 if (saved == 0) {
                     errorMessage = "A user with such username or email already exists!";

@@ -1,12 +1,12 @@
 package ru.itis.orisproject.models;
 
-public class Account {
+public class AccountEntity {
     private String username;
     private String password;
     private String email;
     private String iconPath;
 
-    public Account(String username, String password, String email, String iconPath) {
+    public AccountEntity(String username, String password, String email, String iconPath) {
         this.username = username;
         this.password = password;
         this.email = email;

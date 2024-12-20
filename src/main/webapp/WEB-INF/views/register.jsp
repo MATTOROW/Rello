@@ -62,7 +62,7 @@
                         </div>
                         <div class="row my-2">
                             <div class="col">
-                                <p class="text-center new-acc mb-0">Already have an account?&nbsp;<a href="login">Log in</a>.</p>
+                                <p class="text-center new-acc mb-0">Already have an accountEntity?&nbsp;<a href="login">Log in</a>.</p>
                             </div>
                         </div>
                     </div>

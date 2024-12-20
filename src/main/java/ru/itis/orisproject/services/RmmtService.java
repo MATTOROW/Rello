@@ -1,12 +1,12 @@
 package ru.itis.orisproject.services;
 
-import ru.itis.orisproject.repositories.RmmtDAO;
-import ru.itis.orisproject.models.Account;
+import ru.itis.orisproject.repositories.RmmtRepository;
+import ru.itis.orisproject.models.AccountEntity;
 
 public class RmmtService {
-    private final RmmtDAO dao = new RmmtDAO();
+    private final RmmtRepository dao = new RmmtRepository();
 
-    public Account getAccByToken(String token) {
+    public AccountEntity getAccByToken(String token) {
         return dao.getAccByToken(token);
     }
 
