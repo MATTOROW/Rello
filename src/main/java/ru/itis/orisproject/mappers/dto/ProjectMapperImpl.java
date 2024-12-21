@@ -12,7 +12,7 @@ public class ProjectMapperImpl implements ProjectMapper {
         }
 
         return new ProjectEntity(
-                0,
+                null,
                 projectRequest.name(),
                 projectRequest.description(),
                 null

@@ -2,22 +2,23 @@ package ru.itis.orisproject.models;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class TaskEntity {
-    private Long taskId;
+    private UUID taskId;
     private String name;
     private String description;
-    private Long project_id;
+    private UUID project_id;
     private String status;
     private Date startDate;
     private Date endDate;
     private List<SubtaskEntity> subtasks;
 
     public TaskEntity(
-            Long taskId,
+            UUID taskId,
             String name,
             String description,
-            Long project_id,
+            UUID project_id,
             String status,
             Date startDate,
             Date endDate,
@@ -33,11 +34,11 @@ public class TaskEntity {
         this.subtasks = subtasks;
     }
 
-    public Long getTaskId() {
+    public UUID getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(Long taskId) {
+    public void setTaskId(UUID taskId) {
         this.taskId = taskId;
     }
 
@@ -57,11 +58,11 @@ public class TaskEntity {
         this.description = description;
     }
 
-    public Long getProject_id() {
+    public UUID getProject_id() {
         return project_id;
     }
 
-    public void setProject_id(Long project_id) {
+    public void setProject_id(UUID project_id) {
         this.project_id = project_id;
     }
 

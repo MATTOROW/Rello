@@ -1,4 +1,6 @@
 package ru.itis.orisproject.dto.response;
 
-public record ProjectResponse(Long project_id, String name, String description) {
+import java.util.UUID;
+
+public record ProjectResponse(UUID projectId, String name, String description) {
 }

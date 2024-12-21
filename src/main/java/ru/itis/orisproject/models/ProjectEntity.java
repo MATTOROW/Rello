@@ -3,25 +3,26 @@ package ru.itis.orisproject.models;
 import org.springframework.scheduling.config.Task;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ProjectEntity {
-    private long projectId;
+    private UUID projectId;
     private String name;
     private String description;
     private List<Task> tasks;
 
-    public ProjectEntity(long projectId, String name, String description, List<Task> tasks) {
+    public ProjectEntity(UUID projectId, String name, String description, List<Task> tasks) {
         this.projectId = projectId;
         this.name = name;
         this.description = description;
         this.tasks = tasks;
     }
 
-    public long getProjectId() {
+    public UUID getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(long projectId) {
+    public void setProjectId(UUID projectId) {
         this.projectId = projectId;
     }
 

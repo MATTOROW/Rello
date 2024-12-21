@@ -1,16 +1,17 @@
 package ru.itis.orisproject.models;
 
 import java.sql.Date;
+import java.util.UUID;
 
 public class SubtaskEntity {
-    private Long subtaskId;
+    private UUID subtaskId;
     private String name;
     private String description;
-    private Long taskId;
+    private UUID taskId;
     private boolean completed;
     private Date endDate;
 
-    public SubtaskEntity(Long subtaskId, String name, String description, Long taskId, boolean completed, Date endDate) {
+    public SubtaskEntity(UUID subtaskId, String name, String description, UUID taskId, boolean completed, Date endDate) {
         this.subtaskId = subtaskId;
         this.name = name;
         this.description = description;
@@ -19,11 +20,11 @@ public class SubtaskEntity {
         this.endDate = endDate;
     }
 
-    public Long getSubtaskId() {
+    public UUID getSubtaskId() {
         return subtaskId;
     }
 
-    public void setSubtaskId(Long subtaskId) {
+    public void setSubtaskId(UUID subtaskId) {
         this.subtaskId = subtaskId;
     }
 
@@ -43,11 +44,11 @@ public class SubtaskEntity {
         this.description = description;
     }
 
-    public Long getTaskId() {
+    public UUID getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(Long taskId) {
+    public void setTaskId(UUID taskId) {
         this.taskId = taskId;
     }
 
