@@ -9,6 +9,7 @@ import ru.itis.orisproject.models.ProjectEntity;
 import ru.itis.orisproject.repositories.ProjectRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ProjectService implements ProjectApi {
     private final ProjectMapper mapper = new ProjectMapperImpl();
@@ -20,7 +21,7 @@ public class ProjectService implements ProjectApi {
     }
 
     @Override
-    public ProjectResponse getById(Long id) {
+    public ProjectResponse getById(UUID id) {
         return mapper.toResponse(repo.getById(id));
     }
 
@@ -30,17 +31,17 @@ public class ProjectService implements ProjectApi {
     }
 
     @Override
-    public int updateById(Long id, ProjectRequest projectRequest) {
+    public int updateById(UUID id, ProjectRequest projectRequest) {
         return repo.updateById(id, mapper.toEntity(projectRequest));
     }
 
     @Override
-    public int deleteById(Long id) {
+    public int deleteById(UUID id) {
         return repo.deleteById(id);
     }
 
     @Override
-    public ProjectEntity getEntityById(Long id) {
+    public ProjectEntity getEntityById(UUID id) {
         return repo.getById(id);
     }
 

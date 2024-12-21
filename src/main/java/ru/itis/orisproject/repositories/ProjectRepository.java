@@ -2,10 +2,7 @@ package ru.itis.orisproject.repositories;
 
 
 import ru.itis.orisproject.db.DBConfig;
-import ru.itis.orisproject.dto.request.ProjectRequest;
-import ru.itis.orisproject.dto.response.ProjectResponse;
 import ru.itis.orisproject.mappers.ProjectEntityMapper;
-import ru.itis.orisproject.models.AccountEntity;
 import ru.itis.orisproject.models.ProjectEntity;
 
 import java.sql.PreparedStatement;
@@ -13,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ProjectRepository {
     private final ProjectEntityMapper projectEntityMapper = new ProjectEntityMapper();
@@ -26,7 +24,8 @@ public class ProjectRepository {
 WITH insert_project AS (
     INSERT INTO projects (name, description) VALUES (?, ?) RETURNING project_id
 )
-INSERT INTO account_project SELECT ?, project_id, 1 FROM insert_project""";
+INSERT INTO account_project SELECT ?, project_id, (SELECT role_id FROM project_roles WHERE role_name LIKE 'OWNER')
+                            FROM insert_project""";
     //language=sql
     private final String SQL_UPDATE_BY_ID = "UPDATE projects SET name = ?, description = ? WHERE project_id = ?";
     //language=sql
@@ -48,9 +47,9 @@ SELECT * FROM projects INNER JOIN account_project USING(project_id) WHERE acc_us
         }
     }
 
-    public ProjectEntity getById(Long id) {
+    public ProjectEntity getById(UUID id) {
         try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_GET_BY_ID)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setObject(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next() ? projectEntityMapper.mapRow(resultSet) : null;
         } catch (SQLException e) {
@@ -72,20 +71,20 @@ SELECT * FROM projects INNER JOIN account_project USING(project_id) WHERE acc_us
         }
     }
 
-    public int updateById(Long id, ProjectEntity project) {
+    public int updateById(UUID id, ProjectEntity project) {
         try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_UPDATE_BY_ID)) {
             preparedStatement.setString(1, project.getName());
             preparedStatement.setString(2, project.getDescription());
-            preparedStatement.setLong(3, id);
+            preparedStatement.setObject(3, id);
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             return -1;
         }
     }
 
-    public int deleteById(Long id) {
+    public int deleteById(UUID id) {
         try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_DELETE_BY_ID)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setObject(1, id);
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             return -1;

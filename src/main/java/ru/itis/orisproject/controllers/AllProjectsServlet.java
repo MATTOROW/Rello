@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet(urlPatterns = {"/projects", "/projects/create"})
-public class AccountProjectsServlet extends HttpServlet {
+public class AllProjectsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String servletPath = req.getServletPath();
@@ -23,7 +23,7 @@ public class AccountProjectsServlet extends HttpServlet {
             AccountEntity account = (AccountEntity) req.getSession().getAttribute("account");
             List<ProjectResponse> projects = service.getByUsername(account.getUsername());
             req.setAttribute("projects", projects);
-            req.getRequestDispatcher("/WEB-INF/views/projects.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/views/all_projects.jsp").forward(req, resp);
         } else if (servletPath.equals("/projects/create")) {
             req.getRequestDispatcher("/WEB-INF/views/create_project.jsp").forward(req, resp);
         }
@@ -41,7 +41,7 @@ public class AccountProjectsServlet extends HttpServlet {
             AccountEntity account = (AccountEntity) req.getSession().getAttribute("account");
             ProjectRequest projectRequest = new ProjectRequest(name, description);
             service.save(projectRequest, account.getUsername());
-            resp.sendRedirect(getServletContext().getContextPath() + "/");
+            resp.sendRedirect(getServletContext().getContextPath() + "/projects");
         }
     }
 }

@@ -21,6 +21,4 @@ public interface AccountApi {
     List<AccountResponse> getAll();
 
     AccountEntity getEntityByUsername(String username);
-
-
 }
