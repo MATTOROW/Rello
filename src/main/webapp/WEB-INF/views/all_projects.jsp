@@ -19,9 +19,10 @@
 <body>
 <div class="container mt-5">
     <h1 class="mb-4">Projects</h1>
+    <input type="text" id="searchInput" class="form-control mb-4" placeholder="Search for projects..." onkeyup="searchProjects()">
     <div class="row">
         <c:forEach var="project" items="${projects}">
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4 mb-4 project-card" data-name="${project.name()}" data-description="${project.description()}">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title">${project.name()}</h5>
@@ -34,7 +35,30 @@
     </div>
 </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Функция для поиска проектов
+    function searchProjects() {
+        const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+        const projects = document.querySelectorAll('.project-card');
+
+        if (searchQuery === "") {
+            // Если поле поиска пустое, показываем все проекты
+            projects.forEach(project => {
+                project.style.display = 'block';
+            });
+        } else {
+            projects.forEach(project => {
+                const name = project.querySelector('.card-title').textContent.toLowerCase();
+                const description = project.querySelector('.card-text').textContent.toLowerCase();
+
+                if (name.includes(searchQuery) || description.includes(searchQuery)) {
+                    project.style.display = 'block'; // Показываем карточку
+                } else {
+                    project.style.display = 'none'; // Скрываем карточку
+                }
+            });
+        }
+    }
+</script>
 </body>
 </html>
