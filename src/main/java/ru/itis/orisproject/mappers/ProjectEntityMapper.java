@@ -14,9 +14,7 @@ public class ProjectEntityMapper implements RowMapper<ProjectEntity> {
             String name = resultSet.getString("name");
             String description = resultSet.getString("description");
             return new ProjectEntity(projectId, name, description, null);
-
         } catch (SQLException e) {
-            e.printStackTrace();
             return null;
         }
     }

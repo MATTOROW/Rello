@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class ProjectService implements ProjectApi {
-    private final ProjectMapper mapper = new ProjectMapperImpl();
     private final ProjectRepository repo = new ProjectRepository();
+    private final ProjectMapper mapper = new ProjectMapperImpl();
 
     @Override
     public List<ProjectResponse> getAll() {
@@ -42,7 +42,7 @@ public class ProjectService implements ProjectApi {
 
     @Override
     public ProjectEntity getEntityById(UUID id) {
-        return repo.getById(id);
+        return repo.getWithTasksById(id);
     }
 
     @Override

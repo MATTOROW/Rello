@@ -2,9 +2,12 @@ package ru.itis.orisproject.repositories;
 
 
 import ru.itis.orisproject.db.DBConfig;
+import ru.itis.orisproject.dto.response.TaskResponse;
 import ru.itis.orisproject.mappers.ProjectEntityMapper;
+import ru.itis.orisproject.mappers.dto.TaskMapperImpl;
 import ru.itis.orisproject.models.ProjectEntity;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +17,8 @@ import java.util.UUID;
 
 public class ProjectRepository {
     private final ProjectEntityMapper projectEntityMapper = new ProjectEntityMapper();
+    private final TaskRepository taskRepository = new TaskRepository();
+    private final TaskMapperImpl taskMapper = new TaskMapperImpl();
 
     //language=sql
     private final String SQL_GET_ALL = "SELECT * FROM projects";
@@ -100,6 +105,32 @@ SELECT * FROM projects INNER JOIN account_project USING(project_id) WHERE acc_us
                 projects.add(projectEntityMapper.mapRow(resultSet));
             }
             return projects;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    public ProjectEntity getWithTasksById(UUID id) {
+        Connection connection = DBConfig.getConnection();
+        try {
+            connection.setAutoCommit(false);
+        } catch (SQLException e) {
+            return null;
+        }
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_BY_ID)) {
+            preparedStatement.setObject(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                ProjectEntity projectEntity = projectEntityMapper.mapRow(resultSet);
+                List<TaskResponse> tasks = taskRepository.getByProjectId(id, connection).stream()
+                        .map(taskMapper::toResponse)
+                        .toList();
+                projectEntity.setTasks(tasks);
+                connection.commit();
+                return projectEntity;
+            } else {
+                return null;
+            }
         } catch (SQLException e) {
             return null;
         }

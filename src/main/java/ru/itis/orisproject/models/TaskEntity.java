@@ -21,8 +21,7 @@ public class TaskEntity {
             UUID project_id,
             String status,
             Date startDate,
-            Date endDate,
-            List<SubtaskEntity> subtasks
+            Date endDate
     ) {
         this.taskId = taskId;
         this.name = name;
@@ -31,7 +30,6 @@ public class TaskEntity {
         this.status = status;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.subtasks = subtasks;
     }
 
     public UUID getTaskId() {
