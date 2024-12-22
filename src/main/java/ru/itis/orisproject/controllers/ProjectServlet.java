@@ -9,6 +9,7 @@ import ru.itis.orisproject.dto.response.AccountResponse;
 import ru.itis.orisproject.models.AccountEntity;
 import ru.itis.orisproject.services.AccountProjectService;
 import ru.itis.orisproject.services.ProjectService;
+import ru.itis.orisproject.services.TaskService;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -19,16 +20,19 @@ public class ProjectServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
         boolean hasErrors = false;
-        if (pathInfo.split("/").length == 2) {
-            if (pathInfo != null && pathInfo.startsWith("/")) {
+        if (pathInfo != null && pathInfo.startsWith("/")) {
+            if (pathInfo.split("/").length == 2) {
                 String uuid = pathInfo.substring(1);  // Извлекаем uuid (удаляем ведущий "/")
                 if (uuid.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")) {
                     AccountProjectService accountProjectService = (AccountProjectService) getServletContext()
                             .getAttribute("AccountProjectService");
                     AccountEntity account = (AccountEntity) req.getSession().getAttribute("account");
                     if (accountProjectService.hasAccess(UUID.fromString(uuid), account.getUsername())) {
-                        ProjectService projectService = (ProjectService) getServletContext().getAttribute("ProjectService");
-                        req.setAttribute("project", projectService.getEntityById(UUID.fromString(uuid)));
+                        ProjectService projectService = (ProjectService) getServletContext()
+                                .getAttribute("ProjectService");
+                        TaskService taskService = (TaskService) getServletContext().getAttribute("TaskService");
+                        req.setAttribute("project", projectService.getById(UUID.fromString(uuid)));
+                        req.setAttribute("tasks", taskService.getByProjectId(UUID.fromString(uuid)));
                         req.getRequestDispatcher("/WEB-INF/views/project.jsp").forward(req, resp);
                     } else {
                         AccountResponse owner = accountProjectService.getOwner(UUID.fromString(uuid));

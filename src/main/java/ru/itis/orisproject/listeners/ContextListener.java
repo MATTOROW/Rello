@@ -4,10 +4,7 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 import ru.itis.orisproject.db.DBConfig;
-import ru.itis.orisproject.services.AccountProjectService;
-import ru.itis.orisproject.services.AccountService;
-import ru.itis.orisproject.services.ProjectService;
-import ru.itis.orisproject.services.RmmtService;
+import ru.itis.orisproject.services.*;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -25,6 +22,7 @@ public class ContextListener implements ServletContextListener {
             sce.getServletContext().setAttribute("RmmtService", new RmmtService());
             sce.getServletContext().setAttribute("ProjectService", new ProjectService());
             sce.getServletContext().setAttribute("AccountProjectService", new AccountProjectService());
+            sce.getServletContext().setAttribute("TaskService", new TaskService());
         } catch (IOException e) {
             e.printStackTrace();
         }

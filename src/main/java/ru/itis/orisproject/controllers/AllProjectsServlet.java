@@ -12,7 +12,7 @@ import ru.itis.orisproject.services.ProjectService;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(urlPatterns = {"/projects"})
+@WebServlet(urlPatterns = "/projects")
 public class AllProjectsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
