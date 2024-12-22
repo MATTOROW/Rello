@@ -73,6 +73,9 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ?, descri
             preparedStatement.setString(6, username);
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
+            if (e.getSQLState().equals("23505")) {
+                return 0;
+            }
             return -1;
         }
     }

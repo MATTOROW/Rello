@@ -40,13 +40,18 @@ public class TaskServlet extends HttpServlet {
             } else {
                 resp.getWriter().write("Invalid project UUID format.");
             }
-        } else if (paths.length == 3) {
-            String taskId = paths[2];
-            if (taskId.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")) {
-                TaskResponse task = taskService.getById(UUID.fromString(taskId));
-                objectMapper.writeValue(resp.getWriter(), task);
+        } else if (paths.length == 4) {
+            if (paths[2].equals("task")) {
+                String taskId = paths[3];
+                if (taskId.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")) {
+                    TaskResponse task = taskService.getById(UUID.fromString(taskId));
+                    objectMapper.writeValue(resp.getWriter(), task);
+                } else {
+                    resp.getWriter().write("Invalid project UUID format.");
+                }
             } else {
-                resp.getWriter().write("Invalid project UUID format.");
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid URL");
+                return;
             }
         }
     }

@@ -83,6 +83,9 @@ SELECT * FROM projects INNER JOIN account_project USING(project_id) WHERE acc_us
             preparedStatement.setObject(3, id);
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
+            if (e.getSQLState().equals("23505")) {
+                return 0;
+            }
             return -1;
         }
     }
