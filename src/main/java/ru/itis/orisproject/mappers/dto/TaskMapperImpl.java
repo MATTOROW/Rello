@@ -27,6 +27,7 @@ public class TaskMapperImpl implements TaskMapper {
             return null;
         }
         return new TaskResponse(
+                taskEntity.getTaskId(),
                 taskEntity.getName(),
                 taskEntity.getDescription(),
                 taskEntity.getStatus(),

@@ -3,7 +3,6 @@ package ru.itis.orisproject.controllers;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.itis.orisproject.models.AccountEntity;
 import ru.itis.orisproject.services.AccountService;
 import ru.itis.orisproject.services.HashDeviceId;
@@ -45,13 +44,14 @@ public class AccountCheckServlet extends HttpServlet {
                     Cookie rememberMeCookie = new Cookie("rmmt", rememberMeToken);
                     rememberMeCookie.setMaxAge(60 * 60 * 24);
                     rememberMeCookie.setPath("/");
-
                     String deviceHash = HashDeviceId.hashString(req.getHeader("User-Agent"));
 
-                    if (rmmtService.deviceRemembered(deviceHash)) {
+                    if (rmmtService.deviceRemembered(acc.getUsername(), deviceHash)) {
                         rmmtService.updateAccToken(username, rememberMeToken, deviceHash);
+                        System.out.println("pens1");
                     } else {
                         rmmtService.save(username, rememberMeToken, deviceHash);
+                        System.out.println("pens2");
                     }
 
                     resp.addCookie(rememberMeCookie);

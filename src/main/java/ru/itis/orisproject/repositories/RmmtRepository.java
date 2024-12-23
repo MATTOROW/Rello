@@ -19,7 +19,7 @@ SELECT * FROM accounts INNER JOIN rmmt USING(username) WHERE token = ?""";
     //language=sql
     private final String SQL_SAVE = "INSERT INTO rmmt VALUES (?, ?, ?)";
     //language=sql
-    private final String SQL_DEVICE_REMEMBERED = "SELECT device_id FROM rmmt WHERE device_id = ?";
+    private final String SQL_DEVICE_REMEMBERED = "SELECT device_id FROM rmmt WHERE username = ? AND device_id = ?";
 
     public AccountEntity getAccByToken(String token) {
         try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_GET_ACC_BY_TOKEN)) {
@@ -53,9 +53,10 @@ SELECT * FROM accounts INNER JOIN rmmt USING(username) WHERE token = ?""";
         }
     }
 
-    public boolean deviceRemembered(String deviceId) {
+    public boolean deviceRemembered(String username, String deviceId) {
         try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_DEVICE_REMEMBERED)) {
-            preparedStatement.setString(1, deviceId);
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, deviceId);
             return preparedStatement.executeQuery().next();
         } catch (SQLException e) {
             return false;

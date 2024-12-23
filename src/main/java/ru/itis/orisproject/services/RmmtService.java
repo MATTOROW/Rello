@@ -18,7 +18,7 @@ public class RmmtService {
         return repo.save(username, token, deviceId);
     }
 
-    public boolean deviceRemembered(String deviceId) {
-        return repo.deviceRemembered(deviceId);
+    public boolean deviceRemembered(String username, String deviceId) {
+        return repo.deviceRemembered(username, deviceId);
     }
 }

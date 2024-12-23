@@ -73,8 +73,8 @@ public class AccountSettingsServlet extends HttpServlet {
             String oldImage = account.getIconPath();
             if (Files.exists(Path.of(iconDirUrl + "/" + newImage))) {
                 newImage = newImage.split("\\.")[0] + System.nanoTime() + "." + newImage.split("\\.")[1];
-                Files.delete(Path.of(iconDirUrl + "/" + oldImage));
             }
+            Files.deleteIfExists(Path.of(iconDirUrl + "/" + oldImage));
             iconPart.write(iconDirUrl + "/" + newImage); // Делегируем сохранение
         } else {
             newImage = account.getIconPath();
