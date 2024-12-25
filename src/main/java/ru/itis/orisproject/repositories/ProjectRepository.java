@@ -40,7 +40,8 @@ INSERT INTO account_project SELECT ?, project_id, (SELECT role_id FROM project_r
 SELECT * FROM projects INNER JOIN account_project USING(project_id) WHERE acc_username = ?""";
 
     public List<ProjectEntity> getAll() {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_GET_ALL)) {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ALL)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<ProjectEntity> projects = new ArrayList<>();
             while (resultSet.next()) {
@@ -53,7 +54,8 @@ SELECT * FROM projects INNER JOIN account_project USING(project_id) WHERE acc_us
     }
 
     public ProjectEntity getById(UUID id) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_GET_BY_ID)) {
+        try (Connection connection = DBConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_BY_ID)) {
             preparedStatement.setObject(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next() ? projectEntityMapper.mapRow(resultSet) : null;
@@ -63,7 +65,8 @@ SELECT * FROM projects INNER JOIN account_project USING(project_id) WHERE acc_us
     }
 
     public int save(ProjectEntity project, String username) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_SAVE)) {
+        try (Connection connection = DBConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_SAVE)) {
             preparedStatement.setString(1, project.getName());
             preparedStatement.setString(2, project.getDescription());
             preparedStatement.setString(3, username);
@@ -77,7 +80,8 @@ SELECT * FROM projects INNER JOIN account_project USING(project_id) WHERE acc_us
     }
 
     public int updateById(UUID id, ProjectEntity project) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_UPDATE_BY_ID)) {
+        try (Connection connection = DBConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_BY_ID)) {
             preparedStatement.setString(1, project.getName());
             preparedStatement.setString(2, project.getDescription());
             preparedStatement.setObject(3, id);
@@ -91,7 +95,8 @@ SELECT * FROM projects INNER JOIN account_project USING(project_id) WHERE acc_us
     }
 
     public int deleteById(UUID id) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_DELETE_BY_ID)) {
+        try (Connection connection = DBConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_BY_ID)) {
             preparedStatement.setObject(1, id);
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -100,7 +105,8 @@ SELECT * FROM projects INNER JOIN account_project USING(project_id) WHERE acc_us
     }
 
     public List<ProjectEntity> getByUsername(String username) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_GET_BY_USERNAME)) {
+        try (Connection connection = DBConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_BY_USERNAME)) {
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<ProjectEntity> projects = new ArrayList<>();

@@ -4,6 +4,7 @@ import ru.itis.orisproject.db.DBConfig;
 import ru.itis.orisproject.mappers.AccountEntityMapper;
 import ru.itis.orisproject.models.AccountEntity;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,7 +34,8 @@ SELECT * FROM account_project INNER JOIN accounts ON account_project.acc_usernam
          WHERE project_id = ? AND role_id = (SELECT role_id FROM project_roles WHERE role_name LIKE 'OWNER')""";
 
     public boolean hasAccess(UUID projectId, String username) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_HAS_ACCESS)) {
+        try (   Connection connection = DBConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_HAS_ACCESS)) {
             preparedStatement.setObject(1, projectId);
             preparedStatement.setString(2, username);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -44,7 +46,8 @@ SELECT * FROM account_project INNER JOIN accounts ON account_project.acc_usernam
     }
 
     public int updateRole(UUID projectId, String username, String role) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_UPDATE_ROLE)) {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_ROLE)) {
             preparedStatement.setString(1, role);
             preparedStatement.setObject(2, projectId);
             preparedStatement.setString(3, username);
@@ -55,7 +58,8 @@ SELECT * FROM account_project INNER JOIN accounts ON account_project.acc_usernam
     }
 
     public int addNewParticipant(UUID projectId, String username, String role) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_ADD_PARTICIPANT)) {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_ADD_PARTICIPANT)) {
             preparedStatement.setString(1, username);
             preparedStatement.setObject(2, projectId);
             preparedStatement.setString(3, role);
@@ -67,7 +71,8 @@ SELECT * FROM account_project INNER JOIN accounts ON account_project.acc_usernam
 
     public Map<AccountEntity, String> getAllParticipants(UUID projectId) {
         Map<AccountEntity, String> map = new HashMap<>();
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_GET_ALL_PARTICIPANTS)) {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ALL_PARTICIPANTS)) {
            preparedStatement.setObject(1, projectId);
            ResultSet resultSet = preparedStatement.executeQuery();
            while (resultSet.next()) {
@@ -82,7 +87,8 @@ SELECT * FROM account_project INNER JOIN accounts ON account_project.acc_usernam
     }
 
     public AccountEntity getOwner(UUID projectId) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_GET_OWNER)) {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_OWNER)) {
             preparedStatement.setObject(1, projectId);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next() ? accountEntityMapper.mapRow(resultSet) : null;

@@ -4,6 +4,7 @@ import ru.itis.orisproject.db.DBConfig;
 import ru.itis.orisproject.mappers.AccountEntityMapper;
 import ru.itis.orisproject.models.AccountEntity;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +30,8 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ?, descri
     private final String SQL_GET_ALL = "SELECT * FROM accounts";
 
     public AccountEntity getByUsername(String username) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_GET_BY_USERNAME)) {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_BY_USERNAME)) {
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next() ? accountEntityMapper.mapRow(resultSet) : null;
@@ -39,7 +41,8 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ?, descri
     }
 
     public int save(AccountEntity acc) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_SAVE)) {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SAVE)) {
             preparedStatement.setString(1, acc.getUsername());
             preparedStatement.setString(2, acc.getPassword());
             preparedStatement.setString(3, acc.getEmail());
@@ -55,7 +58,8 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ?, descri
     }
 
     public int deleteByUsername(String username) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_DELETE_BY_USERNAME)) {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_BY_USERNAME)) {
             preparedStatement.setString(1, username);
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -64,7 +68,8 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ?, descri
     }
 
     public int updateByUsername(AccountEntity acc, String username) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_UPDATE_BY_USERNAME)) {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_BY_USERNAME)) {
             preparedStatement.setString(1, acc.getUsername());
             preparedStatement.setString(2, acc.getPassword());
             preparedStatement.setString(3, acc.getEmail());
@@ -81,9 +86,8 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ?, descri
     }
 
     public List<AccountEntity> getByUsernameILike(String username) {
-        try (PreparedStatement preparedStatement = DBConfig
-                .getConnection()
-                .prepareStatement(SQL_GET_BY_USERNAME_ILIKE)) {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_BY_USERNAME_ILIKE)) {
             preparedStatement.setString(1, "\\%%s\\%".formatted(username));
             ResultSet resultSet = preparedStatement.executeQuery();
             List<AccountEntity> accs = new ArrayList<>();
@@ -97,7 +101,8 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ?, descri
     }
 
     public List<AccountEntity> getAll() {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_GET_ALL)) {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ALL)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<AccountEntity> accs = new ArrayList<>();
             while (resultSet.next()) {

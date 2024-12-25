@@ -29,7 +29,8 @@ INSERT INTO tasks (name, description, project_id, start_date, end_date) VALUES (
     private final String SQL_GET_BY_PROJECT_ID = "SELECT * FROM tasks WHERE project_id = ?";
 
     public TaskEntity getById(UUID id) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_GET_BY_ID)) {
+        try (Connection connection = DBConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_BY_ID)) {
             preparedStatement.setObject(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next() ? taskEntityMapper.mapRow(resultSet) : null;
@@ -39,7 +40,8 @@ INSERT INTO tasks (name, description, project_id, start_date, end_date) VALUES (
     }
 
     public int save(TaskEntity task, UUID projectId) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_SAVE)) {
+        try (Connection connection = DBConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_SAVE)) {
             preparedStatement.setString(1, task.getName());
             preparedStatement.setString(2, task.getDescription());
             preparedStatement.setObject(3, projectId);
@@ -52,7 +54,8 @@ INSERT INTO tasks (name, description, project_id, start_date, end_date) VALUES (
     }
 
     public int updateById(TaskEntity task, UUID projectId) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_UPDATE_BY_ID)) {
+        try (Connection connection = DBConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_BY_ID)) {
             preparedStatement.setString(1, task.getName());
             preparedStatement.setString(2, task.getDescription());
             preparedStatement.setObject(3, projectId);
@@ -65,7 +68,8 @@ INSERT INTO tasks (name, description, project_id, start_date, end_date) VALUES (
     }
 
     public int deleteById(UUID id) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_DELETE_BY_ID)) {
+        try (Connection connection = DBConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_BY_ID)) {
             preparedStatement.setObject(1, id);
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {

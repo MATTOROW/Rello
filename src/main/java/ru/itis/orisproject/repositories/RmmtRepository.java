@@ -4,6 +4,7 @@ import ru.itis.orisproject.db.DBConfig;
 import ru.itis.orisproject.mappers.AccountEntityMapper;
 import ru.itis.orisproject.models.AccountEntity;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,7 +23,8 @@ SELECT * FROM accounts INNER JOIN rmmt USING(username) WHERE token = ?""";
     private final String SQL_DEVICE_REMEMBERED = "SELECT device_id FROM rmmt WHERE username = ? AND device_id = ?";
 
     public AccountEntity getAccByToken(String token) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_GET_ACC_BY_TOKEN)) {
+        try (Connection connection = DBConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ACC_BY_TOKEN)) {
             preparedStatement.setString(1, token);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next() ? accountEntityMapper.mapRow(resultSet) : null;
@@ -32,7 +34,8 @@ SELECT * FROM accounts INNER JOIN rmmt USING(username) WHERE token = ?""";
     }
 
     public int updateAccToken(String username, String token, String device_id) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_UPDATE_ACC_TOKEN)) {
+        try (Connection connection = DBConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_ACC_TOKEN)) {
             preparedStatement.setString(1, token);
             preparedStatement.setString(2, username);
             preparedStatement.setString(3, device_id);
@@ -43,7 +46,8 @@ SELECT * FROM accounts INNER JOIN rmmt USING(username) WHERE token = ?""";
     }
 
     public int save(String username, String token, String deviceId) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_SAVE)) {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SAVE)) {
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, token);
             preparedStatement.setString(3, deviceId);
@@ -54,7 +58,8 @@ SELECT * FROM accounts INNER JOIN rmmt USING(username) WHERE token = ?""";
     }
 
     public boolean deviceRemembered(String username, String deviceId) {
-        try (PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_DEVICE_REMEMBERED)) {
+        try (Connection connection = DBConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_DEVICE_REMEMBERED)) {
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, deviceId);
             return preparedStatement.executeQuery().next();
