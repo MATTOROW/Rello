@@ -15,8 +15,8 @@ public class SubtaskMapperImpl implements SubtaskMapper {
                 subtaskRequest.name(),
                 subtaskRequest.description(),
                 null,
-                subtaskRequest.completed(),
-                subtaskRequest.endDate()
+                false,
+                null
         );
     }
 
@@ -30,8 +30,7 @@ public class SubtaskMapperImpl implements SubtaskMapper {
                 subtaskEntity.getSubtaskId(),
                 subtaskEntity.getName(),
                 subtaskEntity.getDescription(),
-                subtaskEntity.isCompleted(),
-                subtaskEntity.getEndDate()
+                subtaskEntity.isCompleted()
                 );
     }
 }

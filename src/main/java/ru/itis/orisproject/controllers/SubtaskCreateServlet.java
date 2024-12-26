@@ -6,11 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.itis.orisproject.dto.request.SubtaskRequest;
-import ru.itis.orisproject.dto.response.SubtaskResponse;
-import ru.itis.orisproject.models.SubtaskEntity;
-import ru.itis.orisproject.models.TaskEntity;
 import ru.itis.orisproject.services.SubtaskService;
-import ru.itis.orisproject.services.TaskService;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,7 +36,7 @@ public class SubtaskCreateServlet extends HttpServlet {
         if (taskId != null && name != null && description != null) {
             // Создаем подзадачу
             SubtaskService service = (SubtaskService) getServletContext().getAttribute("SubtaskService");
-            SubtaskRequest newSubtask = new SubtaskRequest(name, description, false, null);
+            SubtaskRequest newSubtask = new SubtaskRequest(name, description);
             service.save(newSubtask, UUID.fromString(taskId));
             // Перенаправляем обратно на страницу задачи
             resp.sendRedirect(req.getContextPath() + "/task");

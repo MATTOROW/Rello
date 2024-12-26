@@ -56,15 +56,21 @@ public class ProjectSettingsServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ProjectService service = (ProjectService) getServletContext().getAttribute("ProjectService");
         String projectId = req.getParameter("projectId");
+
+        if (req.getParameter("deleteProject") != null) {
+            service.deleteById(UUID.fromString(projectId));
+            resp.sendRedirect(req.getContextPath() + "/projects");
+            return;
+        }
+
         String name = req.getParameter("name");
         String description = req.getParameter("description");
 
         if (name == null || description == null || name.isEmpty() || description.isEmpty()) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Name or description is required");
         }
-
-        ProjectService service = (ProjectService) getServletContext().getAttribute("ProjectService");
         int code = service.updateById(UUID.fromString(projectId), new ProjectRequest(name, description));
         if (code == 1) {
             req.setAttribute("message", "Project settings updated successfully.");

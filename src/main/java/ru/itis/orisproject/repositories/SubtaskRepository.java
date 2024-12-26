@@ -6,16 +6,23 @@ import ru.itis.orisproject.dto.response.SubtaskResponse;
 import ru.itis.orisproject.mappers.SubtaskEntityMapper;
 import ru.itis.orisproject.models.SubtaskEntity;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class SubtaskRepository {
     private final SubtaskEntityMapper subtaskEntityMapper = new SubtaskEntityMapper();
+    private final TaskRepository taskRepository;
+
+    public SubtaskRepository() {
+        this.taskRepository = new TaskRepository(this);
+    }
+
+    public SubtaskRepository(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
 
     //language=sql
     private final String SQL_GET_BY_ID = "SELECT * FROM subtasks WHERE subtask_id = ?";
@@ -24,11 +31,13 @@ public class SubtaskRepository {
 INSERT INTO subtasks (name, description, task_id) VALUES (?, ?, ?)""";
     //language=sql
     private final String SQL_UPDATE_BY_ID = """
-UPDATE subtasks SET name = ?, description = ?, completed = ?, end_date = ? WHERE subtask_id = ?""";
+UPDATE subtasks SET name = ?, description = ? WHERE subtask_id = ?""";
     //language=sql
     private final String SQL_DELETE_BY_ID = "DELETE FROM subtasks WHERE subtask_id = ?";
     //language=sql
     private final String SQL_GET_BY_TASK_ID = "SELECT * FROM subtasks WHERE task_id = ?";
+    //language=sql
+    private final String SQL_UPDATE_STATUS = "UPDATE subtasks SET completed = ?, end_date = ? WHERE subtask_id = ?";
 
     public SubtaskEntity getById(UUID id) {
         try (Connection connection = DBConfig.getConnection();
@@ -56,14 +65,12 @@ UPDATE subtasks SET name = ?, description = ?, completed = ?, end_date = ? WHERE
         }
     }
 
-    public int updateById(SubtaskEntity subtask, UUID subtaskId) {
+    public int updateById(UUID subtaskId, SubtaskEntity subtask) {
         try (Connection connection = DBConfig.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_BY_ID)) {
             preparedStatement.setString(1, subtask.getName());
             preparedStatement.setString(2, subtask.getDescription());
-            preparedStatement.setBoolean(3, subtask.isCompleted());
-            preparedStatement.setDate(4, subtask.getEndDate());
-            preparedStatement.setObject(5, subtaskId);
+            preparedStatement.setObject(3, subtaskId);
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             if (e.getSQLState().equals("23505")) {
@@ -109,6 +116,29 @@ UPDATE subtasks SET name = ?, description = ?, completed = ?, end_date = ? WHERE
             return subtaskResponse;
         } catch (SQLException e) {
             return null;
+        }
+    }
+
+    public int updateStatus(UUID subtaskId, boolean status, UUID taskId) {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_STATUS)) {
+            connection.setAutoCommit(false);
+            preparedStatement.setObject(3, subtaskId);
+            if (status) {
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                String formatted = df.format(new java.util.Date());
+                preparedStatement.setDate(2, Date.valueOf(formatted));
+            } else {
+                preparedStatement.setObject(2, null);
+            }
+            preparedStatement.setBoolean(1, status);
+           int code = preparedStatement.executeUpdate();
+           int taskCode = taskRepository.updateTaskStatus(taskId, connection);
+           connection.commit();
+           return code == 1 && taskCode != -1 ? 1 : 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
         }
     }
 }

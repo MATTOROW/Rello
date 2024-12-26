@@ -21,7 +21,7 @@
 
   <!-- Форма для редактирования названия и описания проекта -->
   <form method="post">
-    <input type="hidden" id="projectId" name="projectId" value="${project.projectId()}">
+    <input type="hidden" name="projectId" value="${project.projectId()}">
     <div class="mb-4">
       <label for="projectName" class="form-label">Project Name</label>
       <input type="text" class="form-control" id="projectName" name="name" value="${project.name()}" required>
@@ -75,29 +75,35 @@
       </c:forEach>
     </ul>
   </div>
-</div>
+  <c:if test="${this_account_role == 'OWNER' || this_account_role == 'ADMIN'}">
+    <div class="mt-4">
+      <h4>Add Member</h4>
+      <div class="mb-3">
+        <label for="userSearch" class="form-label">Search User:</label>
+        <input type="text" id="userSearch" class="form-control" placeholder="Enter username..." onkeyup="searchUsers()">
+        <div id="userDropdown" class="dropdown-menu show" style="display: none;"></div>
+      </div>
+      <div class="mb-3">
+        <label for="roleSelect" class="form-label">Select Role:</label>
+        <select id="roleSelect" class="form-select">
+          <c:forEach var="role" items="${roles}">
+            <c:if test="${!role.equals('OWNER')}">
+              <option value="${role}">${role}</option>
+            </c:if>
+          </c:forEach>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="addMember()">Add</button>
+    </div>
+  </c:if>
 
-<c:if test="${this_account_role == 'OWNER' || this_account_role == 'ADMIN'}">
-  <div class="mt-4">
-    <h4>Add Member</h4>
-    <div class="mb-3">
-      <label for="userSearch" class="form-label">Search User:</label>
-      <input type="text" id="userSearch" class="form-control" placeholder="Enter username..." onkeyup="searchUsers()">
-      <div id="userDropdown" class="dropdown-menu show" style="display: none;"></div>
-    </div>
-    <div class="mb-3">
-      <label for="roleSelect" class="form-label">Select Role:</label>
-      <select id="roleSelect" class="form-select">
-        <c:forEach var="role" items="${roles}">
-          <c:if test="${!role.equals('OWNER')}">
-            <option value="${role}">${role}</option>
-          </c:if>
-        </c:forEach>
-      </select>
-    </div>
-    <button class="btn btn-primary" onclick="addMember()">Add</button>
-  </div>
-</c:if>
+  <c:if test="${this_account_role == 'OWNER'}">
+    <form method="post">
+      <input type="hidden" id="projectId" name="projectId" value="${project.projectId()}">
+      <button type="submit" name="deleteProject" class="btn btn-danger mt-4">Delete Project</button>
+    </form>
+  </c:if>
+</div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {

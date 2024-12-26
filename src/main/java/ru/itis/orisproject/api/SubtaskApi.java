@@ -12,11 +12,13 @@ public interface SubtaskApi {
 
     int save(SubtaskRequest subtask, UUID taskId);
 
-    int updateById(SubtaskRequest subtask, UUID taskId);
+    int updateById(UUID subtaskId, SubtaskRequest subtask);
 
     int deleteById(UUID id);
 
     SubtaskEntity getEntityById(UUID id);
 
     List<SubtaskResponse> getByTaskId(UUID taskId);
+
+    int updateStatus(UUID subtaskId, boolean status, UUID taskId);
 }

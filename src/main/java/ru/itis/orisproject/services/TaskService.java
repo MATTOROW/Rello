@@ -7,6 +7,7 @@ import ru.itis.orisproject.mappers.dto.TaskMapperImpl;
 import ru.itis.orisproject.models.TaskEntity;
 import ru.itis.orisproject.repositories.TaskRepository;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,8 +26,8 @@ public class TaskService implements TaskApi {
     }
 
     @Override
-    public int updateById(TaskRequest task, UUID projectId) {
-        return repo.updateById(mapper.toEntity(task), projectId);
+    public int updateById(UUID taskId, TaskRequest task) {
+        return repo.updateById(taskId, mapper.toEntity(task));
     }
 
     @Override
@@ -42,5 +43,10 @@ public class TaskService implements TaskApi {
     @Override
     public List<TaskResponse> getByProjectId(UUID projectId) {
         return repo.getByProjectId(projectId).stream().map(mapper::toResponse).toList();
+    }
+
+    @Override
+    public int updateTaskStatus(UUID id, Connection connection) {
+        return repo.updateTaskStatus(id, connection);
     }
 }

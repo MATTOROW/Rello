@@ -36,7 +36,7 @@ public class TaskCreateServlet extends HttpServlet {
         if (projectId != null && name != null && description != null && startDate != null) {
             // Создаем задачу
             TaskService taskService = (TaskService) getServletContext().getAttribute("TaskService");
-            TaskRequest newTask = new TaskRequest(name, description, Date.valueOf(startDate), null);
+            TaskRequest newTask = new TaskRequest(name, description, Date.valueOf(startDate));
             taskService.save(newTask, UUID.fromString(projectId));
             // Перенаправляем обратно на страницу проекта
             resp.sendRedirect(req.getContextPath() + "/project");

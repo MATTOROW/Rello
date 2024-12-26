@@ -7,6 +7,7 @@ import ru.itis.orisproject.mappers.dto.SubtaskMapperImpl;
 import ru.itis.orisproject.models.SubtaskEntity;
 import ru.itis.orisproject.repositories.SubtaskRepository;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,8 +26,8 @@ public class SubtaskService implements SubtaskApi {
     }
 
     @Override
-    public int updateById(SubtaskRequest subtask, UUID subtaskId) {
-        return repo.updateById(mapper.toEntity(subtask), subtaskId);
+    public int updateById(UUID subtaskId, SubtaskRequest subtask) {
+        return repo.updateById(subtaskId, mapper.toEntity(subtask));
     }
 
     @Override
@@ -42,5 +43,10 @@ public class SubtaskService implements SubtaskApi {
     @Override
     public List<SubtaskResponse> getByTaskId(UUID taskId) {
         return repo.getByTaskId(taskId).stream().map(mapper::toResponse).toList();
+    }
+
+    @Override
+    public int updateStatus(UUID subtaskId, boolean status, UUID taskId) {
+        return repo.updateStatus(subtaskId, status, taskId);
     }
 }

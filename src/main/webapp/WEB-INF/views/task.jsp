@@ -28,6 +28,17 @@
             <h5 class="card-title">${subtask.name()}</h5>
             <p class="card-text">${subtask.description()}</p>
 
+            <!-- Чекбокс для отметки завершенности подзадачи -->
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox"
+                     id="subtask_${subtask.subtaskId()}"
+                ${subtask.completed() ? 'checked' : ''}
+                     onclick="updateSubtaskStatus('${subtask.subtaskId()}', this)">
+              <label class="form-check-label" for="subtask_${subtask.subtaskId()}">
+                Completed
+              </label>
+            </div>
+
             <!-- Форма для отправки ID подзадачи на сервлет -->
             <form method="post">
               <input type="hidden" name="subtaskId" value="${subtask.subtaskId()}">
@@ -67,6 +78,28 @@
         }
       });
     }
+  }
+
+  function updateSubtaskStatus(subtaskId, checkbox) {
+    const isCompleted = checkbox.checked;
+
+    fetch('${pageContext.request.contextPath}/subtask/update-status', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ subtaskId: subtaskId, completed: isCompleted.toString(), taskId: '${task.getTaskId()}' })
+    })
+            .then(response => {
+              if (!response.ok) {
+                alert('Error updating subtask status');
+                checkbox.checked = !isCompleted;  // Revert checkbox state on failure
+              }
+            })
+            .catch(error => {
+              console.error('Error updating subtask status:', error);
+              checkbox.checked = !isCompleted;  // Revert checkbox state on failure
+            });
   }
 </script>
 </body>

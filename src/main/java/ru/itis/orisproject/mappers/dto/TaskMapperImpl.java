@@ -17,7 +17,7 @@ public class TaskMapperImpl implements TaskMapper {
                 null,
                 null,
                 taskRequest.startDate(),
-                taskRequest.endDate()
+                null
         );
     }
 
