@@ -36,7 +36,7 @@ public class TaskService implements TaskApi {
 
     @Override
     public TaskEntity getEntityById(UUID id) {
-        return repo.getById(id);
+        return repo.getWithSubtasksById(id);
     }
 
     @Override

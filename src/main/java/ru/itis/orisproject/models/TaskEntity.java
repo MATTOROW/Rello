@@ -1,5 +1,7 @@
 package ru.itis.orisproject.models;
 
+import ru.itis.orisproject.dto.response.SubtaskResponse;
+
 import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
@@ -12,7 +14,7 @@ public class TaskEntity {
     private String status;
     private Date startDate;
     private Date endDate;
-    private List<SubtaskEntity> subtasks;
+    private List<SubtaskResponse> subtasks;
 
     public TaskEntity(
             UUID taskId,
@@ -88,11 +90,11 @@ public class TaskEntity {
         this.endDate = endDate;
     }
 
-    public List<SubtaskEntity> getSubtasks() {
+    public List<SubtaskResponse> getSubtasks() {
         return subtasks;
     }
 
-    public void setSubtasks(List<SubtaskEntity> subtasks) {
+    public void setSubtasks(List<SubtaskResponse> subtasks) {
         this.subtasks = subtasks;
     }
 }

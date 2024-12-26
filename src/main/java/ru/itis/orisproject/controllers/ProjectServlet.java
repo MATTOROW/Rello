@@ -21,7 +21,7 @@ public class ProjectServlet extends HttpServlet {
         String pathInfo = req.getPathInfo();
         boolean hasErrors = false;
         if (pathInfo != null && pathInfo.startsWith("/")) {
-            if (pathInfo.split("/").length == 2) {
+            if (pathInfo.split("/").length == 2 || pathInfo.split("/").length == 3) {
                 String uuid = pathInfo.substring(1);  // Извлекаем uuid (удаляем ведущий "/")
                 if (uuid.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")) {
                     AccountProjectService accountProjectService = (AccountProjectService) getServletContext()
@@ -30,10 +30,15 @@ public class ProjectServlet extends HttpServlet {
                     if (accountProjectService.hasAccess(UUID.fromString(uuid), account.getUsername())) {
                         ProjectService projectService = (ProjectService) getServletContext()
                                 .getAttribute("ProjectService");
-                        TaskService taskService = (TaskService) getServletContext().getAttribute("TaskService");
-                        req.setAttribute("project", projectService.getById(UUID.fromString(uuid)));
-                        req.setAttribute("tasks", taskService.getByProjectId(UUID.fromString(uuid)));
-                        req.getRequestDispatcher("/WEB-INF/views/project.jsp").forward(req, resp);
+                        if (pathInfo.split("/").length == 2) {
+                            req.setAttribute("project", projectService.getEntityById(UUID.fromString(uuid)));
+                            req.setAttribute("isOwner", accountProjectService.isOwner(UUID.fromString(uuid), account.getUsername()));
+                            req.setAttribute("participants", accountProjectService.getAllParticipants(UUID.fromString(uuid)));
+                            req.getRequestDispatcher("/WEB-INF/views/project.jsp").forward(req, resp);
+                        } else {
+                            req.setAttribute("project", projectService.getById(UUID.fromString(uuid)));
+                            req.getRequestDispatcher("/WEB-INF/views/project_settings.jsp").forward(req, resp);
+                        }
                     } else {
                         AccountResponse owner = accountProjectService.getOwner(UUID.fromString(uuid));
                         resp.getWriter().write(

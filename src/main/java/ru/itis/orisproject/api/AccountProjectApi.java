@@ -15,4 +15,6 @@ public interface AccountProjectApi {
     Map<AccountResponse, String> getAllParticipants(UUID projectId);
 
     AccountResponse getOwner(UUID projectId);
+
+    boolean isOwner(UUID projectId, String username);
 }

@@ -44,4 +44,8 @@ public class AccountProjectService implements AccountProjectApi {
     public AccountResponse getOwner(UUID projectId) {
         return mapper.toResponse(repo.getOwner(projectId));
     }
+
+    public boolean isOwner(UUID projectId, String username) {
+        return repo.isOwner(projectId, username);
+    }
 }

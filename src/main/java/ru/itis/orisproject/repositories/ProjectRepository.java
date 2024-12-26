@@ -120,13 +120,9 @@ SELECT * FROM projects INNER JOIN account_project USING(project_id) WHERE acc_us
     }
 
     public ProjectEntity getWithTasksById(UUID id) {
-        Connection connection = DBConfig.getConnection();
-        try {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_BY_ID)) {
             connection.setAutoCommit(false);
-        } catch (SQLException e) {
-            return null;
-        }
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_BY_ID)) {
             preparedStatement.setObject(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {

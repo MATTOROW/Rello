@@ -32,6 +32,11 @@ SELECT * FROM account_project
     private final String SQL_GET_OWNER = """
 SELECT * FROM account_project INNER JOIN accounts ON account_project.acc_username = accounts.username
          WHERE project_id = ? AND role_id = (SELECT role_id FROM project_roles WHERE role_name LIKE 'OWNER')""";
+    //language=sql
+    private final String SQL_IS_OWNER = """
+SELECT count(*)
+FROM account_project
+WHERE project_id = ? AND acc_username = ? AND role_id = (SELECT role_id FROM project_roles WHERE role_name = 'OWNER')""";
 
     public boolean hasAccess(UUID projectId, String username) {
         try (   Connection connection = DBConfig.getConnection();
@@ -94,6 +99,18 @@ SELECT * FROM account_project INNER JOIN accounts ON account_project.acc_usernam
             return resultSet.next() ? accountEntityMapper.mapRow(resultSet) : null;
         } catch (SQLException e) {
             return null;
+        }
+    }
+
+    public boolean isOwner(UUID projectId, String username) {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_IS_OWNER)) {
+            preparedStatement.setObject(1, projectId);
+            preparedStatement.setString(2, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next() && resultSet.getInt(1) > 0;
+        } catch (SQLException e) {
+            return false;
         }
     }
 }

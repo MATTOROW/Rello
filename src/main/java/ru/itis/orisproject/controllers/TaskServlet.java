@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.itis.orisproject.dto.response.TaskResponse;
+import ru.itis.orisproject.models.TaskEntity;
 import ru.itis.orisproject.services.TaskService;
 
 import java.io.IOException;
@@ -44,7 +45,7 @@ public class TaskServlet extends HttpServlet {
             if (paths[2].equals("task")) {
                 String taskId = paths[3];
                 if (taskId.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")) {
-                    TaskResponse task = taskService.getById(UUID.fromString(taskId));
+                    TaskEntity task = taskService.getEntityById(UUID.fromString(taskId));
                     objectMapper.writeValue(resp.getWriter(), task);
                 } else {
                     resp.getWriter().write("Invalid project UUID format.");
