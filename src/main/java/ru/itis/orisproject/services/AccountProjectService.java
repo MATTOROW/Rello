@@ -7,6 +7,7 @@ import ru.itis.orisproject.models.AccountEntity;
 import ru.itis.orisproject.repositories.AccountProjectRepository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -47,5 +48,20 @@ public class AccountProjectService implements AccountProjectApi {
 
     public boolean isOwner(UUID projectId, String username) {
         return repo.isOwner(projectId, username);
+    }
+
+    @Override
+    public String getRole(UUID projectId, String username) {
+        return repo.getRole(projectId, username);
+    }
+
+    @Override
+    public List<String> getAllRoles() {
+        return repo.getAllRoles();
+    }
+
+    @Override
+    public int deleteParticipant(UUID projectId, String username) {
+        return repo.deleteParticipant(projectId, username);
     }
 }

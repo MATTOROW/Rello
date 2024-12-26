@@ -14,7 +14,7 @@ public class SubtaskMapperImpl implements SubtaskMapper {
                 null,
                 subtaskRequest.name(),
                 subtaskRequest.description(),
-                subtaskRequest.taskId(),
+                null,
                 subtaskRequest.completed(),
                 subtaskRequest.endDate()
         );

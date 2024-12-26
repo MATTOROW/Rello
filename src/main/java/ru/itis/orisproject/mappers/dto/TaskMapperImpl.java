@@ -14,7 +14,7 @@ public class TaskMapperImpl implements TaskMapper {
                 null,
                 taskRequest.name(),
                 taskRequest.description(),
-                taskRequest.projectId(),
+                null,
                 null,
                 taskRequest.startDate(),
                 taskRequest.endDate()

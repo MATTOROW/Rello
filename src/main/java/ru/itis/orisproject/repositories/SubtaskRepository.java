@@ -21,7 +21,7 @@ public class SubtaskRepository {
     private final String SQL_GET_BY_ID = "SELECT * FROM subtasks WHERE subtask_id = ?";
     //language=sql
     private final String SQL_SAVE = """
-INSERT INTO subtasks (name, description, task_id, completed, end_date) VALUES (?, ?, ?, ?, ?)""";
+INSERT INTO subtasks (name, description, task_id) VALUES (?, ?, ?)""";
     //language=sql
     private final String SQL_UPDATE_BY_ID = """
 UPDATE subtasks SET name = ?, description = ?, completed = ?, end_date = ? WHERE subtask_id = ?""";
@@ -41,14 +41,12 @@ UPDATE subtasks SET name = ?, description = ?, completed = ?, end_date = ? WHERE
         }
     }
 
-    public int save(SubtaskRequest subtask, UUID taskId) {
+    public int save(SubtaskEntity subtask, UUID taskId) {
         try (Connection connection = DBConfig.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_SAVE)) {
-            preparedStatement.setString(1, subtask.name());
-            preparedStatement.setString(2, subtask.description());
+            preparedStatement.setString(1, subtask.getName());
+            preparedStatement.setString(2, subtask.getDescription());
             preparedStatement.setObject(3, taskId);
-            preparedStatement.setBoolean(4, subtask.completed());
-            preparedStatement.setDate(5, subtask.endDate());
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             if (e.getSQLState().equals("23505")) {
@@ -58,13 +56,13 @@ UPDATE subtasks SET name = ?, description = ?, completed = ?, end_date = ? WHERE
         }
     }
 
-    public int updateById(SubtaskRequest subtask, UUID subtaskId) {
+    public int updateById(SubtaskEntity subtask, UUID subtaskId) {
         try (Connection connection = DBConfig.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_BY_ID)) {
-            preparedStatement.setString(1, subtask.name());
-            preparedStatement.setString(2, subtask.description());
-            preparedStatement.setBoolean(3, subtask.completed());
-            preparedStatement.setDate(4, subtask.endDate());
+            preparedStatement.setString(1, subtask.getName());
+            preparedStatement.setString(2, subtask.getDescription());
+            preparedStatement.setBoolean(3, subtask.isCompleted());
+            preparedStatement.setDate(4, subtask.getEndDate());
             preparedStatement.setObject(5, subtaskId);
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {

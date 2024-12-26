@@ -8,9 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class AccountProjectRepository {
     private final AccountEntityMapper accountEntityMapper = new AccountEntityMapper();
@@ -22,7 +20,10 @@ public class AccountProjectRepository {
 UPDATE account_project SET role_id = (SELECT role_id FROM project_roles WHERE role_name = ?)
                        WHERE project_id = ? AND acc_username = ?""";
     //language=sql
-    private final String SQL_ADD_PARTICIPANT = "INSERT INTO account_project VALUES (?, ?, ?)";
+    private final String SQL_ADD_PARTICIPANT = """
+INSERT INTO account_project
+SELECT ?, ?, role_id FROM project_roles
+WHERE role_name = ?""";
     //language=sql
     private final String SQL_GET_ALL_PARTICIPANTS = """
 SELECT * FROM account_project
@@ -37,6 +38,15 @@ SELECT * FROM account_project INNER JOIN accounts ON account_project.acc_usernam
 SELECT count(*)
 FROM account_project
 WHERE project_id = ? AND acc_username = ? AND role_id = (SELECT role_id FROM project_roles WHERE role_name = 'OWNER')""";
+    //language=sql
+    private final String SQL_GET_ROLE = """
+SELECT role_name FROM account_project
+INNER JOIN project_roles USING(role_id)
+WHERE project_id = ? AND acc_username = ?""";
+    //language=sql
+    private final String SQL_GET_ALL_ROLES = "SELECT role_name FROM project_roles";
+    //language=sql
+    private final String SQL_DELETE_PARTICIPANT = "DELETE FROM account_project WHERE project_id = ? AND acc_username = ?";
 
     public boolean hasAccess(UUID projectId, String username) {
         try (   Connection connection = DBConfig.getConnection();
@@ -111,6 +121,43 @@ WHERE project_id = ? AND acc_username = ? AND role_id = (SELECT role_id FROM pro
             return resultSet.next() && resultSet.getInt(1) > 0;
         } catch (SQLException e) {
             return false;
+        }
+    }
+
+    public String getRole(UUID projectId, String username) {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ROLE)) {
+            preparedStatement.setObject(1, projectId);
+            preparedStatement.setString(2, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next() ? resultSet.getString("role_name") : null;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    public List<String> getAllRoles() {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ALL_ROLES)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<String> roles = new ArrayList<>();
+            while (resultSet.next()) {
+                roles.add(resultSet.getString("role_name"));
+            }
+            return roles;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    public int deleteParticipant(UUID projectId, String username) {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_PARTICIPANT)) {
+            preparedStatement.setObject(1, projectId);
+            preparedStatement.setString(2, username);
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            return -1;
         }
     }
 }

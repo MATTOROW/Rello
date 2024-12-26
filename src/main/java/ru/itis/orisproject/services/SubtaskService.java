@@ -21,12 +21,12 @@ public class SubtaskService implements SubtaskApi {
 
     @Override
     public int save(SubtaskRequest subtask, UUID taskId) {
-        return repo.save(subtask, taskId);
+        return repo.save(mapper.toEntity(subtask), taskId);
     }
 
     @Override
     public int updateById(SubtaskRequest subtask, UUID subtaskId) {
-        return repo.updateById(subtask, subtaskId);
+        return repo.updateById(mapper.toEntity(subtask), subtaskId);
     }
 
     @Override

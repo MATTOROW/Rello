@@ -88,7 +88,7 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ?, descri
     public List<AccountEntity> getByUsernameILike(String username) {
         try (Connection connection = DBConfig.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_BY_USERNAME_ILIKE)) {
-            preparedStatement.setString(1, "\\%%s\\%".formatted(username));
+            preparedStatement.setString(1, "%" + username + "%");
             ResultSet resultSet = preparedStatement.executeQuery();
             List<AccountEntity> accs = new ArrayList<>();
             while (resultSet.next()) {

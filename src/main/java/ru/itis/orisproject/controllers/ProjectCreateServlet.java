@@ -11,7 +11,7 @@ import ru.itis.orisproject.services.ProjectService;
 
 import java.io.IOException;
 
-@WebServlet("/projects/create")
+@WebServlet("/project/create")
 public class ProjectCreateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

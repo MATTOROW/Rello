@@ -6,54 +6,45 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.itis.orisproject.dto.response.TaskResponse;
+import ru.itis.orisproject.dto.response.SubtaskResponse;
 import ru.itis.orisproject.models.TaskEntity;
 import ru.itis.orisproject.services.TaskService;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.UUID;
 
-@WebServlet("/tasks/*")
+@WebServlet("/task")
 public class TaskServlet extends HttpServlet {
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
+        // Извлекаем taskId из сессии
+        String taskId = (String) req.getSession().getAttribute("taskId");
 
-        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
-
-        String pathInfo = req.getPathInfo();
-        if (pathInfo == null || pathInfo.equals("/")) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid URL");
-            return;
+        if (taskId != null) {
+            TaskService service = (TaskService) getServletContext().getAttribute("TaskService");
+            TaskEntity task = service.getEntityById(UUID.fromString(taskId));
+            List<SubtaskResponse> subtasks = task.getSubtasks();
+            req.setAttribute("task", task);
+            req.setAttribute("subtasks", subtasks);
+            // Перенаправляем на страницу с деталями задачи
+            req.getRequestDispatcher("/WEB-INF/views/task.jsp").forward(req, resp);
+        } else {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Task ID is required");
         }
-        String[] paths = pathInfo.split("/");
-        TaskService taskService = (TaskService) getServletContext().getAttribute("TaskService");
-        if (paths.length == 2) {
-            String projectId = paths[1];
-            if (projectId.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")) {
-                List<TaskResponse> tasks = taskService.getByProjectId(UUID.fromString(projectId));
-                objectMapper.writeValue(resp.getWriter(), tasks);
-            } else {
-                resp.getWriter().write("Invalid project UUID format.");
-            }
-        } else if (paths.length == 4) {
-            if (paths[2].equals("task")) {
-                String taskId = paths[3];
-                if (taskId.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")) {
-                    TaskEntity task = taskService.getEntityById(UUID.fromString(taskId));
-                    objectMapper.writeValue(resp.getWriter(), task);
-                } else {
-                    resp.getWriter().write("Invalid project UUID format.");
-                }
-            } else {
-                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid URL");
-                return;
-            }
+    }
+
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String subtaskId = req.getParameter("subtaskId");
+
+        if (subtaskId != null) {
+            // Сохраняем subtaskId в сессии
+            req.getSession().setAttribute("subtaskId", subtaskId);
+
+            // Перенаправляем на страницу подзадачи
+            resp.sendRedirect(req.getContextPath() + "/subtask");
+        } else {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Subtask ID is required");
         }
     }
 }

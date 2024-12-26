@@ -1,11 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: pnikita
-  Date: 20.12.2024
-  Time: 20:55
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,12 +20,18 @@
                     <div class="card-body">
                         <h5 class="card-title">${project.name()}</h5>
                         <p class="card-text">${project.description()}</p>
-                        <a href="${pageContext.request.contextPath}/projects/${project.projectId()}" class="btn btn-primary">View Details</a>
+                        <!-- Форма для отправки ID проекта на сервлет -->
+                        <form method="post">
+                            <input type="hidden" name="projectId" value="${project.projectId()}">
+                            <button type="submit" class="btn btn-primary">View Details</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </c:forEach>
     </div>
+
+    <a href="${pageContext.request.contextPath}/project/create" class="btn btn-success mt-3">Create Project</a>
 </div>
 
 <script>

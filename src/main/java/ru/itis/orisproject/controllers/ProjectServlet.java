@@ -5,61 +5,47 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.itis.orisproject.dto.response.AccountResponse;
-import ru.itis.orisproject.models.AccountEntity;
-import ru.itis.orisproject.services.AccountProjectService;
+import ru.itis.orisproject.dto.response.TaskResponse;
+import ru.itis.orisproject.models.ProjectEntity;
 import ru.itis.orisproject.services.ProjectService;
-import ru.itis.orisproject.services.TaskService;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
-@WebServlet("/projects/*")
+@WebServlet("/project")
 public class ProjectServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String pathInfo = req.getPathInfo();
-        boolean hasErrors = false;
-        if (pathInfo != null && pathInfo.startsWith("/")) {
-            if (pathInfo.split("/").length == 2 || pathInfo.split("/").length == 3) {
-                String uuid = pathInfo.substring(1);  // Извлекаем uuid (удаляем ведущий "/")
-                if (uuid.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")) {
-                    AccountProjectService accountProjectService = (AccountProjectService) getServletContext()
-                            .getAttribute("AccountProjectService");
-                    AccountEntity account = (AccountEntity) req.getSession().getAttribute("account");
-                    if (accountProjectService.hasAccess(UUID.fromString(uuid), account.getUsername())) {
-                        ProjectService projectService = (ProjectService) getServletContext()
-                                .getAttribute("ProjectService");
-                        if (pathInfo.split("/").length == 2) {
-                            req.setAttribute("project", projectService.getEntityById(UUID.fromString(uuid)));
-                            req.setAttribute("isOwner", accountProjectService.isOwner(UUID.fromString(uuid), account.getUsername()));
-                            req.setAttribute("participants", accountProjectService.getAllParticipants(UUID.fromString(uuid)));
-                            req.getRequestDispatcher("/WEB-INF/views/project.jsp").forward(req, resp);
-                        } else {
-                            req.setAttribute("project", projectService.getById(UUID.fromString(uuid)));
-                            req.getRequestDispatcher("/WEB-INF/views/project_settings.jsp").forward(req, resp);
-                        }
-                    } else {
-                        AccountResponse owner = accountProjectService.getOwner(UUID.fromString(uuid));
-                        resp.getWriter().write(
-                                "<p>You have no access to this project. Please contact %s. His email %s</p>"
-                                .formatted(owner.username(), owner.email())
-                        );
-                    }
-                } else {
-                    hasErrors = true;
-                }
-            } else {
-                hasErrors = true;
-            }
+        // Извлекаем projectId из сессии
+        String projectId = (String) req.getSession().getAttribute("projectId");
 
-            if (hasErrors) {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().write("Invalid project UUID format.");
-            }
+        if (projectId != null) {
+            ProjectService service = (ProjectService) getServletContext().getAttribute("ProjectService");
+            ProjectEntity project = service.getEntityById(UUID.fromString(projectId));
+            List<TaskResponse> tasks = project.getTasks();
+            req.setAttribute("project", project);
+            req.setAttribute("tasks", tasks);
+
+            // Перенаправляем на страницу с деталями проекта
+            req.getRequestDispatcher("/WEB-INF/views/project.jsp").forward(req, resp);
         } else {
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            resp.getWriter().write("The requested resource was not found");
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Project ID is required");
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String taskId = req.getParameter("taskId");
+
+        if (taskId != null) {
+            // Сохраняем taskId в сессии
+            req.getSession().setAttribute("taskId", taskId);
+
+            // Перенаправляем на страницу задачи
+            resp.sendRedirect(req.getContextPath() + "/task");
+        } else {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Task ID is required");
         }
     }
 }

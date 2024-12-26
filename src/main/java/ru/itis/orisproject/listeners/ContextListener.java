@@ -23,6 +23,7 @@ public class ContextListener implements ServletContextListener {
             sce.getServletContext().setAttribute("ProjectService", new ProjectService());
             sce.getServletContext().setAttribute("AccountProjectService", new AccountProjectService());
             sce.getServletContext().setAttribute("TaskService", new TaskService());
+            sce.getServletContext().setAttribute("SubtaskService", new SubtaskService());
         } catch (IOException e) {
             e.printStackTrace();
         }
