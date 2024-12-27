@@ -1,24 +1,24 @@
 package ru.itis.orisproject.services;
 
-import ru.itis.orisproject.repositories.RmmtDAO;
-import ru.itis.orisproject.models.Account;
+import ru.itis.orisproject.repositories.RmmtRepository;
+import ru.itis.orisproject.models.AccountEntity;
 
 public class RmmtService {
-    private final RmmtDAO dao = new RmmtDAO();
+    private final RmmtRepository repo = new RmmtRepository();
 
-    public Account getAccByToken(String token) {
-        return dao.getAccByToken(token);
+    public AccountEntity getAccByToken(String token) {
+        return repo.getAccByToken(token);
     }
 
     public int updateAccToken(String username, String token, String deviceId) {
-        return dao.updateAccToken(username, token, deviceId);
+        return repo.updateAccToken(username, token, deviceId);
     }
 
     public int save(String username, String token, String deviceId) {
-        return dao.save(username, token, deviceId);
+        return repo.save(username, token, deviceId);
     }
 
-    public boolean deviceRemembered(String deviceId) {
-        return dao.deviceRemembered(deviceId);
+    public boolean deviceRemembered(String username, String deviceId) {
+        return repo.deviceRemembered(username, deviceId);
     }
 }

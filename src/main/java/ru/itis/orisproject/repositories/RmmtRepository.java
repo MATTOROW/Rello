@@ -1,15 +1,16 @@
 package ru.itis.orisproject.repositories;
 
 import ru.itis.orisproject.db.DBConfig;
-import ru.itis.orisproject.mappers.AccountMapper;
-import ru.itis.orisproject.models.Account;
+import ru.itis.orisproject.mappers.AccountEntityMapper;
+import ru.itis.orisproject.models.AccountEntity;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class RmmtDAO {
-    private final AccountMapper accountMapper = new AccountMapper();
+public class RmmtRepository {
+    private final AccountEntityMapper accountEntityMapper = new AccountEntityMapper();
 
     //language=sql
     private final String SQL_GET_ACC_BY_TOKEN = """
@@ -19,22 +20,22 @@ SELECT * FROM accounts INNER JOIN rmmt USING(username) WHERE token = ?""";
     //language=sql
     private final String SQL_SAVE = "INSERT INTO rmmt VALUES (?, ?, ?)";
     //language=sql
-    private final String SQL_DEVICE_REMEMBERED = "SELECT device_id FROM rmmt WHERE device_id = ?";
+    private final String SQL_DEVICE_REMEMBERED = "SELECT device_id FROM rmmt WHERE username = ? AND device_id = ?";
 
-    public Account getAccByToken(String token) {
-        try {
-            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_GET_ACC_BY_TOKEN);
+    public AccountEntity getAccByToken(String token) {
+        try (Connection connection = DBConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ACC_BY_TOKEN)) {
             preparedStatement.setString(1, token);
             ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.next() ? accountMapper.mapRow(resultSet) : null;
+            return resultSet.next() ? accountEntityMapper.mapRow(resultSet) : null;
         } catch (SQLException e) {
             return null;
         }
     }
 
     public int updateAccToken(String username, String token, String device_id) {
-        try {
-            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_UPDATE_ACC_TOKEN);
+        try (Connection connection = DBConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_ACC_TOKEN)) {
             preparedStatement.setString(1, token);
             preparedStatement.setString(2, username);
             preparedStatement.setString(3, device_id);
@@ -45,8 +46,8 @@ SELECT * FROM accounts INNER JOIN rmmt USING(username) WHERE token = ?""";
     }
 
     public int save(String username, String token, String deviceId) {
-        try {
-            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_SAVE);
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SAVE)) {
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, token);
             preparedStatement.setString(3, deviceId);
@@ -56,10 +57,11 @@ SELECT * FROM accounts INNER JOIN rmmt USING(username) WHERE token = ?""";
         }
     }
 
-    public boolean deviceRemembered(String deviceId) {
-        try {
-            PreparedStatement preparedStatement = DBConfig.getConnection().prepareStatement(SQL_DEVICE_REMEMBERED);
-            preparedStatement.setString(1, deviceId);
+    public boolean deviceRemembered(String username, String deviceId) {
+        try (Connection connection = DBConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_DEVICE_REMEMBERED)) {
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, deviceId);
             return preparedStatement.executeQuery().next();
         } catch (SQLException e) {
             return false;

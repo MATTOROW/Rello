@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ page session="false" %>
-
+<%@ page contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
 
@@ -10,7 +10,7 @@
     <title>Login</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat&amp;display=swap">
-    <link rel="stylesheet" href="static/css/login-register/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/login-register/styles.css">
 </head>
 
 <body class="d-flex align-items-center">

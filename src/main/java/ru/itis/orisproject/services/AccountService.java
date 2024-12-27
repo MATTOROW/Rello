@@ -1,30 +1,51 @@
 package ru.itis.orisproject.services;
 
-import ru.itis.orisproject.repositories.AccountDAO;
-import ru.itis.orisproject.models.Account;
+import ru.itis.orisproject.api.AccountApi;
+import ru.itis.orisproject.dto.request.AccountRequest;
+import ru.itis.orisproject.dto.response.AccountResponse;
+import ru.itis.orisproject.mappers.dto.AccountMapper;
+import ru.itis.orisproject.mappers.dto.AccountMapperImpl;
+import ru.itis.orisproject.models.AccountEntity;
+import ru.itis.orisproject.repositories.AccountRepository;
 
 import java.util.List;
 
-public class AccountService {
-    private final AccountDAO dao = new AccountDAO();
+public class AccountService implements AccountApi {
+    private final AccountRepository repo = new AccountRepository();
+    private final AccountMapper mapper = new AccountMapperImpl();
 
-    public Account getByUsername(String username) {
-        return dao.getByUsername(username);
+    @Override
+    public AccountResponse getByUsername(String username) {
+        return mapper.toResponse(repo.getByUsername(username));
     }
 
-    public int save(Account acc) {
-        return dao.save(acc);
+    @Override
+    public int save(AccountRequest acc) {
+        return repo.save(mapper.toEntity(acc));
     }
 
+    @Override
     public int deleteByUsername(String username) {
-        return dao.deleteByUsername(username);
+        return repo.deleteByUsername(username);
     }
 
-    public int updateByUsername(Account acc, String username) {
-        return dao.updateByUsername(acc, username);
+    @Override
+    public int updateByUsername(AccountRequest acc, String username) {
+        return repo.updateByUsername(mapper.toEntity(acc), username);
     }
 
-    public List<Account> getByUsernameILike(String username) {
-        return dao.getByUsernameILike(username);
+    @Override
+    public List<AccountResponse> getByUsernameILike(String username) {
+        return repo.getByUsernameILike(username).stream().map(mapper::toResponse).toList();
+    }
+
+    @Override
+    public List<AccountResponse> getAll() {
+        return repo.getAll().stream().map(mapper::toResponse).toList();
+    }
+
+    @Override
+    public AccountEntity getEntityByUsername(String username) {
+        return repo.getByUsername(username);
     }
 }

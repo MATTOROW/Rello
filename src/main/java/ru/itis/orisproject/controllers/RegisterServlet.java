@@ -5,9 +5,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.itis.orisproject.models.Account;
+import ru.itis.orisproject.dto.request.AccountRequest;
 import ru.itis.orisproject.services.AccountService;
+import ru.itis.orisproject.services.PasswordCoder;
 
 import java.io.IOException;
 
@@ -23,18 +23,19 @@ public class RegisterServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         String email = req.getParameter("email");
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         String errorMessage = null;
         AccountService accountService = (AccountService) req.getServletContext().getAttribute("AccountService");
 
         if (!username.isEmpty() && !password.isEmpty() && !email.isEmpty()) {
             if (isEmailValid(email)) {
-                String hashPassword = passwordEncoder.encode(password);
-                Account acc = new Account(username, hashPassword, email, null);
+                String hashPassword = PasswordCoder.encode(password);
+                AccountRequest acc = new AccountRequest(username, hashPassword, email, null, null);
                 int saved = accountService.save(acc);
                 if (saved == 0) {
                     errorMessage = "A user with such username or email already exists!";
+                } else if (saved == -1) {
+                    errorMessage = "Error with database, try again.";
                 }
             } else {
                 errorMessage = "Your email does not matches pattern!";
