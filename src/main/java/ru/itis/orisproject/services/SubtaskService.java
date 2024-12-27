@@ -7,7 +7,6 @@ import ru.itis.orisproject.mappers.dto.SubtaskMapperImpl;
 import ru.itis.orisproject.models.SubtaskEntity;
 import ru.itis.orisproject.repositories.SubtaskRepository;
 
-import java.sql.Connection;
 import java.util.List;
 import java.util.UUID;
 

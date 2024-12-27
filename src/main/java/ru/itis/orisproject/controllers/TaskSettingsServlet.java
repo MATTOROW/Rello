@@ -5,10 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.itis.orisproject.dto.request.ProjectRequest;
 import ru.itis.orisproject.dto.request.TaskRequest;
 import ru.itis.orisproject.dto.response.TaskResponse;
-import ru.itis.orisproject.services.ProjectService;
 import ru.itis.orisproject.services.TaskService;
 
 import java.io.IOException;
@@ -24,9 +22,12 @@ public class TaskSettingsServlet extends HttpServlet {
             TaskService taskService = (TaskService) getServletContext().getAttribute("TaskService");
 
             TaskResponse task = taskService.getById(UUID.fromString(taskId));
-            req.setAttribute("task", task);
-
-            req.getRequestDispatcher("/WEB-INF/views/task_settings.jsp").forward(req, resp);
+            if (task != null) {
+                req.setAttribute("task", task);
+                req.getRequestDispatcher("/WEB-INF/views/task_settings.jsp").forward(req, resp);
+            } else {
+                resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Task not found");
+            }
         } else {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Task ID is required");
         }

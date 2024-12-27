@@ -7,12 +7,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.itis.orisproject.dto.response.ProjectResponse;
 import ru.itis.orisproject.models.AccountEntity;
-import ru.itis.orisproject.models.ProjectEntity;
 import ru.itis.orisproject.services.ProjectService;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 @WebServlet(urlPatterns = "/projects")
 public class AllProjectsServlet extends HttpServlet {
@@ -30,10 +28,7 @@ public class AllProjectsServlet extends HttpServlet {
         String projectId = req.getParameter("projectId");
 
         if (projectId != null) {
-            // Сохраняем projectId в сессии
             req.getSession().setAttribute("projectId", projectId);
-
-            // Перенаправляем на страницу проекта
             resp.sendRedirect(req.getContextPath() + "/project");
         } else {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Project ID is required");

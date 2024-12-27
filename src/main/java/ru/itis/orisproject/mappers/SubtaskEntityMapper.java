@@ -1,7 +1,6 @@
 package ru.itis.orisproject.mappers;
 
 import ru.itis.orisproject.models.SubtaskEntity;
-import ru.itis.orisproject.models.TaskEntity;
 
 import java.sql.Date;
 import java.sql.ResultSet;

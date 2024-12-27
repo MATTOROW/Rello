@@ -5,8 +5,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
-import ru.itis.orisproject.dto.request.AccountRequest;
 import ru.itis.orisproject.models.AccountEntity;
 
 import java.io.IOException;
@@ -20,7 +18,7 @@ public class AccountServlet extends HttpServlet {
             req.setAttribute("username", account.getUsername());
             req.setAttribute("description", account.getDescription());
             req.setAttribute("email", account.getEmail());
-            req.setAttribute("iconUrl", "images/%s".formatted(account.getIconPath()));
+            req.setAttribute("iconUrl", account.getIconPath());
             req.getRequestDispatcher("/WEB-INF/views/account.jsp").forward(req, resp);
         } else {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

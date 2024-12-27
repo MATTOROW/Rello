@@ -47,6 +47,13 @@ WHERE project_id = ? AND acc_username = ?""";
     private final String SQL_GET_ALL_ROLES = "SELECT role_name FROM project_roles";
     //language=sql
     private final String SQL_DELETE_PARTICIPANT = "DELETE FROM account_project WHERE project_id = ? AND acc_username = ?";
+    //language=sql
+    private final String SQL_HAS_ACCESS_TO_TASK = """
+SELECT COUNT(*) FROM account_project WHERE (SELECT project_id FROM tasks WHERE task_id = ?) AND acc_username = ?""";
+    //language=sql
+    private final String SQL_HAS_ACCESS_TO_SUBTASK = """
+SELECT COUNT(*) FROM account_project WHERE
+(SELECT project_id FROM tasks where task_id = (SELECT task_id FROM subtasks WHERE subtask_id = ?)) AND acc_username = ?""";
 
     public boolean hasAccess(UUID projectId, String username) {
         try (   Connection connection = DBConfig.getConnection();
@@ -158,6 +165,30 @@ WHERE project_id = ? AND acc_username = ?""";
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             return -1;
+        }
+    }
+
+    public boolean hasAccessToTask(UUID taskId, String username) {
+        try (   Connection connection = DBConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_HAS_ACCESS_TO_TASK)) {
+            preparedStatement.setObject(1, taskId);
+            preparedStatement.setString(2, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next() && resultSet.getInt(1) == 1;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public boolean hasAccessToSubtask(UUID subtaskId, String username) {
+        try (   Connection connection = DBConfig.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_HAS_ACCESS_TO_SUBTASK)) {
+            preparedStatement.setObject(1, subtaskId);
+            preparedStatement.setString(2, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next() && resultSet.getInt(1) == 1;
+        } catch (SQLException e) {
+            return false;
         }
     }
 }

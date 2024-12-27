@@ -13,6 +13,7 @@ import java.util.List;
 
 public class AccountRepository {
     private final AccountEntityMapper accountEntityMapper = new AccountEntityMapper();
+    private final ProjectRepository projectRepository = new ProjectRepository();
 
     //language=sql
     private final String SQL_GET_BY_USERNAME = "SELECT * FROM accounts WHERE username = ?";
@@ -60,9 +61,14 @@ UPDATE accounts SET username = ?, password = ?, email = ?, icon_path = ?, descri
     public int deleteByUsername(String username) {
         try (Connection connection = DBConfig.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_BY_USERNAME)) {
+            connection.setAutoCommit(false);
             preparedStatement.setString(1, username);
-            return preparedStatement.executeUpdate();
+            int projectCode = projectRepository.deleteByUsername(username, connection);
+            int code = preparedStatement.executeUpdate();
+            connection.commit();
+            return code > 0 && projectCode > 0 ? code : -1;
         } catch (SQLException e) {
+            e.printStackTrace();
             return -1;
         }
     }

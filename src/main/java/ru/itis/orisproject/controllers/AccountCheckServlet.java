@@ -23,21 +23,17 @@ public class AccountCheckServlet extends HttpServlet {
         String errorMessage = null;
 
         if (!username.isEmpty() && !password.isEmpty()) {
-            // Проверка учетных данных пользователя
             AccountEntity acc = accountService.getEntityByUsername(username);
 
             if (acc != null && PasswordCoder.matches(password, acc.getPassword())) {
-                // Создаем сессию
                 HttpSession session = req.getSession();
                 session.setAttribute("account", acc);
 
-                // Удаляем содержащуюся куку
                 Cookie lastRmmtCookie = new Cookie("rmmt", "");
                 lastRmmtCookie.setMaxAge(0);
                 lastRmmtCookie.setPath("/");
                 resp.addCookie(lastRmmtCookie);
 
-                // Если выбран "запомнить меня", создаем токен
                 if (rememberMe) {
                     RmmtService rmmtService = (RmmtService) req.getServletContext().getAttribute("RmmtService");
                     String rememberMeToken = UUID.randomUUID().toString();
@@ -48,10 +44,8 @@ public class AccountCheckServlet extends HttpServlet {
 
                     if (rmmtService.deviceRemembered(acc.getUsername(), deviceHash)) {
                         rmmtService.updateAccToken(username, rememberMeToken, deviceHash);
-                        System.out.println("pens1");
                     } else {
                         rmmtService.save(username, rememberMeToken, deviceHash);
-                        System.out.println("pens2");
                     }
 
                     resp.addCookie(rememberMeCookie);

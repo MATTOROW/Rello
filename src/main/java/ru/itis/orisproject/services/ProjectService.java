@@ -49,4 +49,9 @@ public class ProjectService implements ProjectApi {
     public List<ProjectResponse> getByUsername(String username) {
         return repo.getByUsername(username).stream().map(mapper::toResponse).toList();
     }
+
+    @Override
+    public int deleteByUsername(String username) {
+        return repo.deleteByUsername(username);
+    }
 }

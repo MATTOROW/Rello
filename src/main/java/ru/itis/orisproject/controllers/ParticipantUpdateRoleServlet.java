@@ -23,8 +23,6 @@ public class ParticipantUpdateRoleServlet extends HttpServlet {
         String username = requestData.get("username");
         String role = requestData.get("role");
 
-        // Логика обновления роли пользователя в базе данных
-        // Убедитесь, что только OWNER может менять роль и что роль может быть только на ADMIN или MEMBER
         AccountProjectService service = (AccountProjectService) getServletContext().getAttribute("AccountProjectService");
         int code = service.updateRole(UUID.fromString(projectId), username, role);
         if (code == 1) {

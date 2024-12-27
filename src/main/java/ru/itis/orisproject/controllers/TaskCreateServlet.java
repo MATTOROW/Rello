@@ -18,7 +18,6 @@ public class TaskCreateServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String projectId = (String) req.getSession().getAttribute("projectId");
         if (projectId != null) {
-            // Передаем projectId на страницу создания задачи
             req.setAttribute("projectId", projectId);
             req.getRequestDispatcher("/WEB-INF/views/create_task.jsp").forward(req, resp);
         } else {
@@ -34,11 +33,9 @@ public class TaskCreateServlet extends HttpServlet {
         String startDate = req.getParameter("startDate");
 
         if (projectId != null && name != null && description != null && startDate != null) {
-            // Создаем задачу
             TaskService taskService = (TaskService) getServletContext().getAttribute("TaskService");
             TaskRequest newTask = new TaskRequest(name, description, Date.valueOf(startDate));
             taskService.save(newTask, UUID.fromString(projectId));
-            // Перенаправляем обратно на страницу проекта
             resp.sendRedirect(req.getContextPath() + "/project");
         }
     }

@@ -28,17 +28,21 @@ public class AccountSettingsServlet extends HttpServlet {
         req.setAttribute("password", account.getPassword());
         req.setAttribute("email", account.getEmail());
         req.setAttribute("description", account.getDescription());
+        req.setAttribute("iconUrl", account.getIconPath());
 
-        req.setAttribute("iconUrl", "images/%s".formatted(account.getIconPath()));
-
-        // Перенаправляем на страницу редактирования аккаунта
         req.getRequestDispatcher("/WEB-INF/views/account_settings.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // Извлекаем данные из формы
+        AccountService service = (AccountService) getServletContext().getAttribute("AccountService");
         String username = req.getParameter("username").trim();
+        if (req.getParameter("deleteAccount") != null) {
+            System.out.println(service.deleteByUsername(username));
+            req.getSession().removeAttribute("account");
+            resp.sendRedirect(req.getContextPath() + "/");
+            return;
+        }
         String email = req.getParameter("email").trim();
         String password = req.getParameter("password").trim();
         String description = req.getParameter("description").trim();
@@ -56,19 +60,16 @@ public class AccountSettingsServlet extends HttpServlet {
         if (description.isEmpty()) {
             description = account.getDescription();
         }
-        // Обработка иконки
-        Part iconPart = req.getPart("icon"); // Получаем файл иконки
+        Part iconPart = req.getPart("icon");
         String newImage = null;
         if (iconPart != null && iconPart.getSize() > 0) {
             // Проверка MIME типа
             String mimeType = iconPart.getContentType();
             if (!mimeType.split("/")[0].equals("image")) {
-                // Если MIME тип не разрешен
                 req.setAttribute("message", "Only image files are allowed.");
-                doGet(req, resp); // Перенаправляем на страницу с сообщением об ошибке
+                doGet(req, resp);
                 return;
             }
-            // Если файл прошел все проверки, сохраняем его
             newImage = iconPart.getSubmittedFileName();
             String oldImage = account.getIconPath();
             if (Files.exists(Path.of(iconDirUrl + "/" + newImage))) {
@@ -79,8 +80,6 @@ public class AccountSettingsServlet extends HttpServlet {
         } else {
             newImage = account.getIconPath();
         }
-
-        AccountService service = (AccountService) getServletContext().getAttribute("AccountService");
         AccountRequest accountRequest = new AccountRequest(
                 username,
                 password,
@@ -96,8 +95,6 @@ public class AccountSettingsServlet extends HttpServlet {
             account.setDescription(description);
             account.setIconPath(newImage);
             req.getSession().setAttribute("account", account);
-
-            // Уведомление об успешном обновлении
             req.setAttribute("message", "Account settings updated successfully.");
         } else if (code == 0) {
             req.setAttribute("message", "This username or email are already taken.");
@@ -106,7 +103,6 @@ public class AccountSettingsServlet extends HttpServlet {
         }
 
 
-        // Перенаправляем обратно на страницу редактирования
         doGet(req, resp);
     }
 }

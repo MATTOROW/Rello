@@ -1,13 +1,10 @@
 package ru.itis.orisproject.repositories;
 
 import ru.itis.orisproject.db.DBConfig;
-import ru.itis.orisproject.dto.request.ProjectRequest;
 import ru.itis.orisproject.dto.response.SubtaskResponse;
-import ru.itis.orisproject.dto.response.TaskResponse;
 import ru.itis.orisproject.mappers.TaskEntityMapper;
 import ru.itis.orisproject.mappers.dto.SubtaskMapper;
 import ru.itis.orisproject.mappers.dto.SubtaskMapperImpl;
-import ru.itis.orisproject.models.ProjectEntity;
 import ru.itis.orisproject.models.SubtaskEntity;
 import ru.itis.orisproject.models.TaskEntity;
 

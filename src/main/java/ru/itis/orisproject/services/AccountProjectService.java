@@ -21,6 +21,16 @@ public class AccountProjectService implements AccountProjectApi {
     }
 
     @Override
+    public boolean hasAccessToTask(UUID taskId, String username) {
+        return repo.hasAccessToTask(taskId, username);
+    }
+
+    @Override
+    public boolean hasAccessToSubtask(UUID subtaskId, String username) {
+        return repo.hasAccessToSubtask(subtaskId, username);
+    }
+
+    @Override
     public int updateRole(UUID projectId, String username, String role) {
         return repo.updateRole(projectId, username, role);
     }

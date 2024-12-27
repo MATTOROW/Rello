@@ -5,9 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.itis.orisproject.dto.request.AccountRequest;
-import ru.itis.orisproject.models.AccountEntity;
 import ru.itis.orisproject.services.AccountService;
 import ru.itis.orisproject.services.PasswordCoder;
 

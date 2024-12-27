@@ -18,6 +18,8 @@ public interface ProjectApi {
 
     int deleteById(UUID id);
 
+    int deleteByUsername(String username);
+
     ProjectEntity getEntityById(UUID id);
 
     List<ProjectResponse> getByUsername(String username);

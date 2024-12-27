@@ -1,15 +1,11 @@
 package ru.itis.orisproject.controllers;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 @WebServlet("/images/*")
 public class ImageLoaderServlet extends HttpServlet {

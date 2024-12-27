@@ -5,8 +5,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.itis.orisproject.dto.request.AccountRequest;
-import ru.itis.orisproject.dto.response.AccountResponse;
 import ru.itis.orisproject.services.AccountProjectService;
 
 import java.io.IOException;
@@ -22,7 +20,6 @@ public class ParticipantAddServlet extends HttpServlet {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
-            // Парсим JSON в Map
             Map<String, String> requestData = objectMapper.readValue(req.getInputStream(), Map.class);
             String projectId = requestData.get("projectId");
             String username = requestData.get("username");
@@ -34,16 +31,11 @@ public class ParticipantAddServlet extends HttpServlet {
                 return;
             }
 
-
-
-            // Добавляем участника в проект
             AccountProjectService service = (AccountProjectService) getServletContext().getAttribute("AccountProjectService");
             service.addNewParticipant(UUID.fromString(projectId), username, role);
 
-            // Успешный ответ
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception e) {
-            // Обработка ошибок
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             e.printStackTrace();
         }

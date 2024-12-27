@@ -9,6 +9,10 @@ import java.util.UUID;
 public interface AccountProjectApi {
     boolean hasAccess(UUID projectId, String username);
 
+    boolean hasAccessToTask(UUID taskId, String username);
+
+    boolean hasAccessToSubtask(UUID subtaskId, String username);
+
     int updateRole(UUID projectId, String username, String role);
 
     int addNewParticipant(UUID projectId, String username, String role);

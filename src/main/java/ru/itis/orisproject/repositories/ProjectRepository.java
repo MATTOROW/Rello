@@ -38,6 +38,11 @@ INSERT INTO account_project SELECT ?, project_id, (SELECT role_id FROM project_r
     //language=sql
     private final String SQL_GET_BY_USERNAME = """
 SELECT * FROM projects INNER JOIN account_project USING(project_id) WHERE acc_username = ?""";
+    //language=sql
+    private final String SQL_DELETE_BY_USERNAME = """
+DELETE FROM projects WHERE project_id IN
+(SELECT project_id FROM account_project WHERE acc_username = ? AND role_id =
+(SELECT role_id FROM project_roles WHERE role_name LIKE 'OWNER'))""";
 
     public List<ProjectEntity> getAll() {
         try (Connection connection = DBConfig.getConnection();
@@ -138,6 +143,26 @@ SELECT * FROM projects INNER JOIN account_project USING(project_id) WHERE acc_us
             }
         } catch (SQLException e) {
             return null;
+        }
+    }
+
+    public int deleteByUsername(String username) {
+        try (Connection connection = DBConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_BY_USERNAME)) {
+            preparedStatement.setString(1, username);
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            return -1;
+        }
+    }
+
+    public int deleteByUsername(String username, Connection connection) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_BY_USERNAME)) {
+            preparedStatement.setString(1, username);
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
         }
     }
 }

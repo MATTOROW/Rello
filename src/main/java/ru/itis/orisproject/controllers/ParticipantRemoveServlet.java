@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.itis.orisproject.models.AccountEntity;
 import ru.itis.orisproject.services.AccountProjectService;
-import ru.itis.orisproject.services.ProjectService;
 
 import java.io.IOException;
 import java.util.Map;
@@ -43,7 +42,6 @@ public class ParticipantRemoveServlet extends HttpServlet {
 
         String targetRole = accountProjectService.getRole(UUID.fromString(projectId), usernameToRemove);
 
-        // Проверяем ограничения на роли
         if ("OWNER".equals(targetRole)) {
             resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Cannot remove the owner of the project.");
             return;

@@ -22,8 +22,6 @@ public class UpdateSubtaskStatusServlet extends HttpServlet {
         String subtaskId = requestData.get("subtaskId");
         boolean completed = Boolean.parseBoolean(requestData.get("completed"));
         String taskId = requestData.get("taskId");
-
-        // Логика обновления статуса подзадачи в базе данных
         SubtaskService subtaskService = (SubtaskService) getServletContext().getAttribute("SubtaskService");
         int success = subtaskService.updateStatus(UUID.fromString(subtaskId), completed, UUID.fromString(taskId));
 

@@ -22,7 +22,8 @@
             <div class="card">
                 <div class="card-body text-center">
                     <!-- Иконка аккаунта -->
-                    <img src="${pageContext.request.contextPath}/${iconUrl}" alt="Account Icon" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
+                    <c:if test="${iconUrl != null}"><img src="${pageContext.request.contextPath}/images/${iconUrl}" alt="Account Icon" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;"></c:if>
+                    <c:if test="${iconUrl == null}"><img src="${pageContext.request.contextPath}/static/img/account_logo.svg" alt="Account Icon" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;"></c:if>
 
                     <!-- Имя пользователя -->
                     <h5 class="card-title mb-2">

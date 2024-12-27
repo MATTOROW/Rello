@@ -17,18 +17,19 @@ import java.util.UUID;
 public class ProjectServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // Извлекаем projectId из сессии
         String projectId = (String) req.getSession().getAttribute("projectId");
 
         if (projectId != null) {
             ProjectService service = (ProjectService) getServletContext().getAttribute("ProjectService");
             ProjectEntity project = service.getEntityById(UUID.fromString(projectId));
-            List<TaskResponse> tasks = project.getTasks();
-            req.setAttribute("project", project);
-            req.setAttribute("tasks", tasks);
-
-            // Перенаправляем на страницу с деталями проекта
-            req.getRequestDispatcher("/WEB-INF/views/project.jsp").forward(req, resp);
+            if (project != null) {
+                List<TaskResponse> tasks = project.getTasks();
+                req.setAttribute("project", project);
+                req.setAttribute("tasks", tasks);
+                req.getRequestDispatcher("/WEB-INF/views/project.jsp").forward(req, resp);
+            } else {
+                resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Project not found");
+            }
         } else {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Project ID is required");
         }
@@ -39,10 +40,8 @@ public class ProjectServlet extends HttpServlet {
         String taskId = req.getParameter("taskId");
 
         if (taskId != null) {
-            // Сохраняем taskId в сессии
             req.getSession().setAttribute("taskId", taskId);
 
-            // Перенаправляем на страницу задачи
             resp.sendRedirect(req.getContextPath() + "/task");
         } else {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Task ID is required");

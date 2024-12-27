@@ -34,7 +34,8 @@
             <div class="mb-3 text-center">
               <label for="icon" class="form-label">Account Icon</label>
               <div class="mb-2">
-                <img src="${pageContext.request.contextPath}/${iconUrl}" alt="Current Icon" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                <c:if test="${iconUrl != null}"><img src="${pageContext.request.contextPath}/images/${iconUrl}" alt="Current Icon" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;"></c:if>
+                <c:if test="${iconUrl == null}"><img src="${pageContext.request.contextPath}/static/img/account_logo.svg" alt="Current Icon" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;"></c:if>
               </div>
               <input type="file" class="form-control" id="icon" name="icon" accept="image/*">
             </div>
@@ -62,6 +63,10 @@
             <div class="text-center">
               <button type="submit" class="btn btn-primary">Save Changes</button>
             </div>
+          </form>
+          <form method="post">
+            <input type="hidden" name="username" value="${username}">
+            <button type="submit" name="deleteAccount" class="btn btn-danger mt-4">Delete account</button>
           </form>
         </div>
       </div>

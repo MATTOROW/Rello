@@ -10,7 +10,6 @@ import ru.itis.orisproject.dto.response.SubtaskResponse;
 import ru.itis.orisproject.services.SubtaskService;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.util.UUID;
 
 @WebServlet("/subtask/settings")
@@ -22,9 +21,12 @@ public class SubtaskSettingsServlet extends HttpServlet {
             SubtaskService subtaskService = (SubtaskService) getServletContext().getAttribute("SubtaskService");
 
             SubtaskResponse subtask = subtaskService.getById(UUID.fromString(subtaskId));
-            req.setAttribute("subtask", subtask);
-
-            req.getRequestDispatcher("/WEB-INF/views/subtask_settings.jsp").forward(req, resp);
+            if (subtask != null) {
+                req.setAttribute("subtask", subtask);
+                req.getRequestDispatcher("/WEB-INF/views/subtask_settings.jsp").forward(req, resp);
+            } else {
+                resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Subtask not found");
+            }
         } else {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Subtask ID is required");
         }

@@ -20,11 +20,12 @@ public class SubtaskServlet extends HttpServlet {
         if (subtaskId != null) {
             SubtaskService service = (SubtaskService) getServletContext().getAttribute("SubtaskService");
             SubtaskEntity subtask = service.getEntityById(UUID.fromString(subtaskId));
-
-            req.setAttribute("subtask", subtask);
-
-            // Перенаправляем на страницу с деталями подзадачи
-            req.getRequestDispatcher("/WEB-INF/views/subtask.jsp").forward(req, resp);
+            if (subtask != null) {
+                req.setAttribute("subtask", subtask);
+                req.getRequestDispatcher("/WEB-INF/views/subtask.jsp").forward(req, resp);
+            } else {
+                resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Subtask not found");
+            }
         } else {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Subtask ID is required");
         }

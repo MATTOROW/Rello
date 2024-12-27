@@ -1,6 +1,5 @@
 package ru.itis.orisproject.mappers;
 
-import org.springframework.scheduling.config.Task;
 import ru.itis.orisproject.models.TaskEntity;
 
 import java.sql.Date;

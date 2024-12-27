@@ -1,8 +1,6 @@
 package ru.itis.orisproject.repositories;
 
 import ru.itis.orisproject.db.DBConfig;
-import ru.itis.orisproject.dto.request.SubtaskRequest;
-import ru.itis.orisproject.dto.response.SubtaskResponse;
 import ru.itis.orisproject.mappers.SubtaskEntityMapper;
 import ru.itis.orisproject.models.SubtaskEntity;
 
