@@ -26,6 +26,27 @@ public class AuthFilter implements Filter {
                         httpRequest.getServletPath().startsWith("/register")
         ) {
             chain.doFilter(request, response);
+        } else if (httpRequest.getServletPath().isEmpty()) {
+            HttpSession session = httpRequest.getSession(false);
+            Cookie[] cookies = httpRequest.getCookies();
+            String rememberMeToken = null;
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("rmmt".equals(cookie.getName())) {
+                        rememberMeToken = cookie.getValue();
+                        break;
+                    }
+                }
+            }
+            if (rememberMeToken != null) {
+                RmmtService rmmtService = (RmmtService) request.getServletContext().getAttribute("RmmtService");
+                AccountEntity accountEntity = rmmtService.getAccByToken(rememberMeToken);
+                if (accountEntity != null) {
+                    session = httpRequest.getSession(true);
+                    session.setAttribute("account", accountEntity);
+                }
+            }
+            chain.doFilter(request, response);
         } else {
             HttpSession session = httpRequest.getSession(false);
             if (session != null && session.getAttribute("account") != null) {
