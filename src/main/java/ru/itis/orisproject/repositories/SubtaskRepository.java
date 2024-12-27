@@ -31,7 +31,7 @@ INSERT INTO subtasks (name, description, task_id) VALUES (?, ?, ?)""";
     private final String SQL_UPDATE_BY_ID = """
 UPDATE subtasks SET name = ?, description = ? WHERE subtask_id = ?""";
     //language=sql
-    private final String SQL_DELETE_BY_ID = "DELETE FROM subtasks WHERE subtask_id = ?";
+    private final String SQL_DELETE_BY_ID = "DELETE FROM subtasks WHERE subtask_id = ? RETURNING task_id";
     //language=sql
     private final String SQL_GET_BY_TASK_ID = "SELECT * FROM subtasks WHERE task_id = ?";
     //language=sql
@@ -51,10 +51,14 @@ UPDATE subtasks SET name = ?, description = ? WHERE subtask_id = ?""";
     public int save(SubtaskEntity subtask, UUID taskId) {
         try (Connection connection = DBConfig.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_SAVE)) {
+            connection.setAutoCommit(false);
             preparedStatement.setString(1, subtask.getName());
             preparedStatement.setString(2, subtask.getDescription());
             preparedStatement.setObject(3, taskId);
-            return preparedStatement.executeUpdate();
+            int code =  preparedStatement.executeUpdate();
+            taskRepository.updateTaskStatus(taskId, connection);
+            connection.commit();
+            return code;
         } catch (SQLException e) {
             if (e.getSQLState().equals("23505")) {
                 return 0;
@@ -82,7 +86,17 @@ UPDATE subtasks SET name = ?, description = ? WHERE subtask_id = ?""";
         try (Connection connection = DBConfig.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_BY_ID)) {
             preparedStatement.setObject(1, id);
-            return preparedStatement.executeUpdate();
+            connection.setAutoCommit(false);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            int code = 0;
+            if (resultSet.next()) {
+                code = 1;
+            } else {
+                code = -1;
+            }
+            int taskCode = taskRepository.updateTaskStatus(resultSet.getObject(1, UUID.class), connection);
+            connection.commit();
+            return code;
         } catch (SQLException e) {
             return -1;
         }
