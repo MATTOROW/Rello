@@ -32,12 +32,14 @@ public class ParticipantAddServlet extends HttpServlet {
             }
 
             AccountProjectService service = (AccountProjectService) getServletContext().getAttribute("AccountProjectService");
-            service.addNewParticipant(UUID.fromString(projectId), username, role);
-
-            resp.setStatus(HttpServletResponse.SC_OK);
+            int code = service.addNewParticipant(UUID.fromString(projectId), username, role);
+            if (code == 1) {
+                resp.setStatus(HttpServletResponse.SC_OK);
+            } else {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Error while adding participant");
+            }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            e.printStackTrace();
         }
     }
 }

@@ -13,26 +13,21 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-md py-3" data-bs-theme="dark">
-        <div class="container"><a class="navbar-brand d-flex align-items-center" href="${pageContext.request.contextPath}"><img class="logo" src="${pageContext.request.contextPath}/static/img/logo.svg" width="50px"><span class="brand-name">Rello</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-5"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navcol-5">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/projects">Projects</a></li>
-                </ul>
-                <c:if test="${account == null}"><a class="btn btn-primary ms-md-2 login-register-btn" role="button" href="${pageContext.request.contextPath}/login">Login</a><a class="btn btn-primary ms-md-2 login-register-btn" role="button" href="${pageContext.request.contextPath}/register">Register</a></c:if>
-                <c:if test="${account != null}">
-                    <div class="dropdown account-panel"><a class="dropdown-toggle my-dropdown" aria-expanded="false" data-bs-toggle="dropdown"><img class="acc-icon" src="<c:if test="${account.getIconPath() != null}">
-                           ${account.getIconPath()}
-                        </c:if><c:if test="${account.getIconPath() == null}">${pageContext.request.contextPath}/static/img/account_logo.svg</c:if>" width="40px" /><span class="username">${account.getUsername()}</span></a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="${pageContext.request.contextPath}/account">View account</a>
-                            <a class="dropdown-item" href="${pageContext.request.contextPath}/account/settings">Edit account</a>
-                            <a class="dropdown-item logout-btn btn btn-primary" href="${pageContext.request.contextPath}/logout">Log out</a></div>
-                    </div>
-                </c:if>
+<nav class="navbar navbar-expand-md py-3" data-bs-theme="dark">
+    <div class="container"><a class="navbar-brand d-flex align-items-center" href="${pageContext.request.contextPath}"><img class="logo" src="${pageContext.request.contextPath}/static/img/logo.svg" width="50px"><span class="brand-name">Rello</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-5"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navcol-5">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/projects">Projects</a></li>
+            </ul>
+            <div class="dropdown account-panel"><a class="dropdown-toggle my-dropdown" aria-expanded="false" data-bs-toggle="dropdown"><img class="acc-icon rounded-circle" src="<c:if test="${account.getIconPath() != null}">${pageContext.request.contextPath}/images/${account.getIconPath()}</c:if><c:if test="${account.getIconPath() == null}">${pageContext.request.contextPath}/static/img/account_logo.svg</c:if>" width="40px" /><span class="username">${account.getUsername()}</span></a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/account">View account</a>
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/account/settings">Edit account</a>
+                    <a class="dropdown-item logout-btn btn btn-primary" href="${pageContext.request.contextPath}/logout">Log out</a></div>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
     <div class="container main-container">
         <h2>Welcome to Rello project!</h2>
         <p>This website is designed for easy project management with your team. This service allows you to visualize current tasks, which will make working on a project easier. Try it, you just need to sign up!</p>
